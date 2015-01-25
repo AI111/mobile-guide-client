@@ -13,16 +13,10 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.Transition;
-import android.transition.TransitionSet;
-import android.transition.TransitionValues;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,16 +24,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.sasha.osmdroid.R;
-import com.example.sasha.osmdroid.cash.loader.CityGuide;
-import com.example.sasha.osmdroid.cash.loader.mega.Mega;
+import com.example.sasha.osmdroid.mega.Mega;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
@@ -122,47 +113,47 @@ public class DownloadListFragment extends Fragment {
         super.onDestroy();
         Log.d(MainActivity.LOG_TAG, "onDestroy");
     }
-    public void notification(){
-        final NotificationManager mNotifyManager =
-                (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-
-      final  Notification.Builder mBuilder= new Notification.Builder(getActivity());
-         mBuilder.setContentTitle("Picture Download")
-                .setContentText("Download in progress")
-                .setSmallIcon(R.drawable.png);
-// Start a lengthy operation in a background thread
-        new Thread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        int incr;
-                        // Do the "lengthy" operation 20 times
-                        for (incr = 0; incr <= 100; incr+=5) {
-                            // Sets the progress indicator to a max value, the
-                            // current completion percentage, and "determinate"
-                            // state
-                            mBuilder.setProgress(100, incr, false);
-                            // Displays the progress bar for the first time.
-                            mNotifyManager.notify(id, mBuilder.build());
-                            // Sleeps the thread, simulating an operation
-                            // that takes time
-                            try {
-                                // Sleep for 5 seconds
-                                Thread.sleep(5*1000);
-                            } catch (InterruptedException e) {
-                                Log.d(MainActivity.LOG_TAG, "sleep failure");
-                            }
-                        }
-                        // When the loop is finished, updates the notification
-                        mBuilder.setContentText("Download complete")
-                                // Removes the progress bar
-                                .setProgress(0,0,false);
-                        mNotifyManager.notify(id, mBuilder.build());
-                    }
-                }
-// Starts the thread by calling the run() method in its Runnable
-        ).start();
-    }
+//    public void notification(){
+//        final NotificationManager mNotifyManager =
+//                (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//      final  Notification.Builder mBuilder= new Notification.Builder(getActivity());
+//         mBuilder.setContentTitle("Picture Download")
+//                .setContentText("Download in progress")
+//                .setSmallIcon(R.drawable.png);
+//// Start a lengthy operation in a background thread
+//        new Thread(
+//                new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        int incr;
+//                        // Do the "lengthy" operation 20 times
+//                        for (incr = 0; incr <= 100; incr+=5) {
+//                            // Sets the progress indicator to a max value, the
+//                            // current completion percentage, and "determinate"
+//                            // state
+//                            mBuilder.setProgress(100, incr, false);
+//                            // Displays the progress bar for the first time.
+//                            mNotifyManager.notify(id, mBuilder.build());
+//                            // Sleeps the thread, simulating an operation
+//                            // that takes time
+//                            try {
+//                                // Sleep for 5 seconds
+//                                Thread.sleep(5*1000);
+//                            } catch (InterruptedException e) {
+//                                Log.d(MainActivity.LOG_TAG, "sleep failure");
+//                            }
+//                        }
+//                        // When the loop is finished, updates the notification
+//                        mBuilder.setContentText("Download complete")
+//                                // Removes the progress bar
+//                                .setProgress(0,0,false);
+//                        mNotifyManager.notify(id, mBuilder.build());
+//                    }
+//                }
+//// Starts the thread by calling the run() method in its Runnable
+//        ).start();
+//    }
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(MainActivity.LOG_TAG, "onCreateView");
@@ -184,7 +175,7 @@ public class DownloadListFragment extends Fragment {
         mAdapter = new MyAdapter(guides);
         mAdapter.setOnItemClickListener(new OnItemClicklistener() {
             @Override
-            public void onClickItem(View rootView, View view, int position) {
+            public void onClickItem(View rootView, View view, final int position) {
                 if (view.getId() == R.id.imageView2) {
                     Intent intent = new Intent(getActivity(), DetailCityInfoActivity.class);
                     intent.putExtra(DetailCityInfoActivity.VIEW_NAME_HEADER_TITLE, MainActivity.guides.get(position).getName());
@@ -208,7 +199,7 @@ public class DownloadListFragment extends Fragment {
                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                   Toast.makeText(getActivity(),getActivity().getFilesDir().toString(),Toast.LENGTH_SHORT).show();
+                                  new CashDownloader().execute(guides.get(position));
                                 }
                             });
                     alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancle",
@@ -339,7 +330,9 @@ public class DownloadListFragment extends Fragment {
                 mBuilder.setProgress(0,0,true);
                 mNotifyManager.notify(id,mBuilder.build());
                 try {
-                    mega.download(citys[0].getMapCashUrl(),getString(R.string.map_cash_path));
+                    mega.download(city.getMapCashUrl(),getString(R.string.map_cash_path));
+
+
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 } catch (NoSuchPaddingException e) {
@@ -374,7 +367,8 @@ public class DownloadListFragment extends Fragment {
             super.onPostExecute(aVoid);
             mBuilder.setContentText("Download complete")
                     // Removes the progress bar
-                    .setProgress(0,0,false);
+                    .setProgress(0,0,false)
+                    .setOngoing(false);
             mNotifyManager.notify(id, mBuilder.build());
 
         }

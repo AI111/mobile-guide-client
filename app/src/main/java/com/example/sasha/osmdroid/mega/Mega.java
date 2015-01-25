@@ -1,4 +1,4 @@
-package com.example.sasha.osmdroid.cash.loader.mega;
+package com.example.sasha.osmdroid.mega;
 
 import org.json.JSONException;
 import org.json.JSONObject;

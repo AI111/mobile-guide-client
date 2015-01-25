@@ -18,13 +18,13 @@ import java.util.Arrays;
 public class MainActivity extends ActionBarActivity {
     public static ArrayList<CityGuide> guides= new ArrayList<>(Arrays.asList(
             new CityGuide[]{new CityGuide("Odessa Ukraine", "The RecyclerView widget is a more advanced and flexible version of ListView. This widget is a container for displaying large data sets that can be scrolled very efficiently by maintaining a limited number of views. Use the RecyclerView widget when you have data collections whose elements change at runtime based on user action or network events."
-                    , "https://lh6.googleusercontent.com/-hWrHTKA8dsg/UhdiOTmhNwI/AAAAAAAAA40/jCx8Hvd-3FU/w1203-h902-no/IMG_20130822_221423.JPG", (byte) 5, "urlCash"),
-            new CityGuide("Odessa", "description", "https://lh5.googleusercontent.com/-hh-mJKr5C3E/U9Uuk4fsKhI/AAAAAAAADck/QaI_s6KbGrE/w1145-h859-no/IMG_20140727_175448.jpg", (byte) 5, "urlCash"),
-            new CityGuide("Odessa", "description", "https://lh6.googleusercontent.com/-aHWnoKUODx8/U8erOLuga8I/AAAAAAAADE8/MsjHp6ASQsI/w1203-h902-no/IMG_20140714_192145.jpg", (byte) 5, "urlCash"),
-            new CityGuide("Odessa", "description", "https://lh6.googleusercontent.com/--gpgKdawen4/U8errG36YFI/AAAAAAAADIk/x8MMcVXBJ7Q/w1203-h902-no/IMG_20140715_174957.jpg", (byte) 5, "urlCash"),
-            new CityGuide("Odessa", "description", "https://lh6.googleusercontent.com/-Qwqhx0tlkoA/U8EgdZaBRcI/AAAAAAAAC3Y/UDbwxISQvNA/w1203-h902-no/IMG_20140712_083445.jpg", (byte) 5, "urlCash"),
-            new CityGuide("Odessa", "description", "https://lh4.googleusercontent.com/-azMH99iPn54/U8EgSHUKp_I/AAAAAAAAC2o/dJSlhP1QDu4/w1203-h902-no/IMG_20140712_065329.jpg", (byte) 5, "urlCash"),
-            new CityGuide("Odessa", "description", "https://lh3.googleusercontent.com/-pxkqr2fj8cA/UhkdBjNtHuI/AAAAAAAAA7Y/5eh40FcgcGk/w1203-h902-no/IMG_20130823_184120.jpg", (byte) 5, "urlCash")}));
+                    , "https://lh6.googleusercontent.com/-hWrHTKA8dsg/UhdiOTmhNwI/AAAAAAAAA40/jCx8Hvd-3FU/w1203-h902-no/IMG_20130822_221423.JPG", (byte) 5, "urlCash","https://mega.co.nz/#!FEk2TIIb!rhlwEhAj-UC6KIsesfeqzqkyl560SbzSEhlvUu2_bEg"),
+            new CityGuide("Odessa", "description", "https://lh5.googleusercontent.com/-hh-mJKr5C3E/U9Uuk4fsKhI/AAAAAAAADck/QaI_s6KbGrE/w1145-h859-no/IMG_20140727_175448.jpg", (byte) 5, "urlCash","mapCash"),
+            new CityGuide("Odessa", "description", "https://lh6.googleusercontent.com/-aHWnoKUODx8/U8erOLuga8I/AAAAAAAADE8/MsjHp6ASQsI/w1203-h902-no/IMG_20140714_192145.jpg", (byte) 5, "urlCash","mapCash"),
+            new CityGuide("Odessa", "description", "https://lh6.googleusercontent.com/--gpgKdawen4/U8errG36YFI/AAAAAAAADIk/x8MMcVXBJ7Q/w1203-h902-no/IMG_20140715_174957.jpg", (byte) 5, "urlCash","mapCash"),
+            new CityGuide("Odessa", "description", "https://lh6.googleusercontent.com/-Qwqhx0tlkoA/U8EgdZaBRcI/AAAAAAAAC3Y/UDbwxISQvNA/w1203-h902-no/IMG_20140712_083445.jpg", (byte) 5, "urlCash","mapCash"),
+            new CityGuide("Odessa", "description", "https://lh4.googleusercontent.com/-azMH99iPn54/U8EgSHUKp_I/AAAAAAAAC2o/dJSlhP1QDu4/w1203-h902-no/IMG_20140712_065329.jpg", (byte) 5, "urlCash","mapCash"),
+            new CityGuide("Odessa", "description", "https://lh3.googleusercontent.com/-pxkqr2fj8cA/UhkdBjNtHuI/AAAAAAAAA7Y/5eh40FcgcGk/w1203-h902-no/IMG_20130823_184120.jpg", (byte) 5, "urlCash","mapCash")}));
     public static final String LOG_TAG = "OSM_DROID_TAG";
     public static DownloadListFragment listFragment;
 

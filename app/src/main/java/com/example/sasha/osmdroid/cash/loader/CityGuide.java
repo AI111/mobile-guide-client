@@ -8,18 +8,18 @@ public class CityGuide {
     private String description;
     private String imgUrl;
     private byte rating;
-    private String cashUri;
+    private String dataCashUri;
     private String mapCashUrl;
     public CityGuide(){
 
     }
 
-    public CityGuide(String name, String description, String imgUrl, byte rating, String cashUri, String mapCashUrl) {
+    public CityGuide(String name, String description, String imgUrl, byte rating, String dataCashUri, String mapCashUrl) {
         this.name = name;
         this.description = description;
         this.imgUrl = imgUrl;
         this.rating = rating;
-        this.cashUri = cashUri;
+        this.dataCashUri = dataCashUri;
         this.mapCashUrl = mapCashUrl;
     }
 
@@ -30,7 +30,7 @@ public class CityGuide {
                 ", description='" + description + '\'' +
                 ", imgUrl='" + imgUrl + '\'' +
                 ", rating=" + rating +
-                ", cashUri='" + cashUri + '\'' +
+                ", cashUri='" + dataCashUri + '\'' +
                 ", mapCashUrl='" + mapCashUrl + '\'' +
                 '}';
     }
@@ -68,11 +68,11 @@ public class CityGuide {
     }
 
     public String getCashUri() {
-        return cashUri;
+        return dataCashUri;
     }
 
     public void setCashUri(String cashUri) {
-        this.cashUri = cashUri;
+        this.dataCashUri = cashUri;
     }
 
     public String getMapCashUrl() {

@@ -1,4 +1,4 @@
-package com.example.sasha.osmdroid.cash.loader.mega; /*******************************************************************************
+package com.example.sasha.osmdroid.mega; /*******************************************************************************
  * Copyright (c) 2013 Ale46.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
@@ -18,7 +18,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 

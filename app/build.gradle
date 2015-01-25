@@ -39,4 +39,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.+'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     compile 'org.json:json:20141113'
+    compile 'com.j256.ormlite:ormlite-android:4.48'
+
 }
