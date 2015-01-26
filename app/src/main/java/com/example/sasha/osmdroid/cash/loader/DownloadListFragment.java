@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.example.sasha.osmdroid.R;
 import com.example.sasha.osmdroid.mega.Mega;
+import com.example.sasha.osmdroid.types.CityGuide;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -330,7 +331,7 @@ public class DownloadListFragment extends Fragment {
                 mBuilder.setProgress(0,0,true);
                 mNotifyManager.notify(id,mBuilder.build());
                 try {
-                    mega.download(city.getMapCashUrl(),getString(R.string.map_cash_path));
+                    mega.download(city.getCasMaphUri(),getString(R.string.map_cash_path));
 
 
                 } catch (NoSuchAlgorithmException e) {
