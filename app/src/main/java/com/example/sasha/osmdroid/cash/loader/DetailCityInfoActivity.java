@@ -2,15 +2,7 @@ package com.example.sasha.osmdroid.cash.loader;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.RecyclerView;
-import android.transition.Transition;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,15 +25,16 @@ public class DetailCityInfoActivity extends Activity {
     public static final String VIEW_NAME_HEADER_TITLE = "detail:header:title";
     public static final String VIEW_DESCRIPTION = "detail:header:description";
     public static final String VIEW_RATING_HEADER_IMAGE = "detail:header:rating";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_city_activity);
 
-        imageView = (ImageView)findViewById(R.id.imageView3);
-        name = (TextView)findViewById(R.id.textView9);
-        descriptiion = (TextView)findViewById(R.id.textView10);
-        rating = (TextView)findViewById(R.id.textView11);
+        imageView = (ImageView) findViewById(R.id.imageView3);
+        name = (TextView) findViewById(R.id.textView9);
+        descriptiion = (TextView) findViewById(R.id.textView10);
+        rating = (TextView) findViewById(R.id.textView11);
         name.setText(getIntent().getStringExtra(DetailCityInfoActivity.VIEW_NAME_HEADER_TITLE));
         descriptiion.setText(getIntent().getStringExtra(DetailCityInfoActivity.VIEW_DESCRIPTION));
         // BEGIN_INCLUDE(detail_set_view_name)

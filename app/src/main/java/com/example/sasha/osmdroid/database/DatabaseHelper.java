@@ -27,7 +27,7 @@ public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
 
     //ссылки на DAO соответсвующие сущностям, хранимым в БД
     private CityGuideDAO cityGuideDAO = null;
-   // private RoleDAO roleDao = null;
+    private CustomGeoPointDAO customGeoPointDAO = null;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -44,9 +44,9 @@ public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
             throw new RuntimeException(e);
         }
     }
+    @Override
+    public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVer, int newVer){
 
-    public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVer,
-                          int newVer){
         try{
             //Так делают ленивые, гораздо предпочтительнее не удаляя БД аккуратно вносить изменения
             TableUtils.dropTable(connectionSource, CityGuide.class, true);
@@ -60,19 +60,19 @@ public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
     }
 
     //синглтон для GoalDAO
-    public CityGuideDAO getGoalDAO() throws SQLException{
+    public CityGuideDAO getCityGuideDAO() throws SQLException{
         if(cityGuideDAO == null){
             cityGuideDAO = new CityGuideDAO(getConnectionSource(), CityGuide.class);
         }
         return cityGuideDAO;
     }
    // /синглтон для RoleDAO
-//    public RoleDAO getRoleDAO() throws SQLException{
-//        if(roleDao == null){
-//            roleDao = new RoleDAO(getConnectionSource(), Role.class);
-//        }
-//        return roleDao;
-//    }
+    public CustomGeoPointDAO getCustomGeoPointDAO() throws SQLException{
+        if(customGeoPointDAO == null){
+            customGeoPointDAO = new CustomGeoPointDAO(getConnectionSource(), CustomGeoPoint.class);
+        }
+        return customGeoPointDAO;
+    }
 
     //выполняется при закрытии приложения
     @Override

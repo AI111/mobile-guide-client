@@ -17,14 +17,6 @@
 package com.example.sasha.osmdroid.cash.loader;
 
 import android.app.Activity;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.v4.view.ViewCompat;
-import android.transition.Transition;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.example.sasha.osmdroid.R;
 //import com.squareup.picasso.Picasso;
 
 /**

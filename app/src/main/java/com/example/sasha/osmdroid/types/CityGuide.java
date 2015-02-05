@@ -1,10 +1,16 @@
 package com.example.sasha.osmdroid.types;
 
+import com.example.sasha.osmdroid.database.HelperFactory;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.lang.reflect.Array;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -29,28 +35,43 @@ public class CityGuide {
     private byte rating;
 
     @DatabaseField()
-    private String cashMapUri;
+    private String mapCash;
+
+    @DatabaseField()
+    private String dataCash;
 
     @DatabaseField(dataType = DataType.DATE)
     private Date changed;
 
-    @DatabaseField()
-    private CustomGeoPoint[] points;
+    @ForeignCollectionField(eager = true)
+    public Collection<CustomGeoPoint> points;// = new ArrayList<CustomGeoPoint>();
 
-    public CityGuide(String name, String description, String imgUrl, byte rating, String cashMapUri, Date changed, CustomGeoPoint[] points) {
+    public boolean installed;
+
+    public CityGuide(String name, String description, String imgUrl, byte rating, String mapCash,String dataCash, Date changed) {
         this.name = name;
         this.description = description;
         this.imgUrl = imgUrl;
         this.rating = rating;
-        this.cashMapUri = cashMapUri;
+        this.mapCash = mapCash;
+        this.dataCash=dataCash;
         this.changed = changed;
-        this.points = points;
+        points = new ArrayList<CustomGeoPoint>();
     }
     public CityGuide(){
         super();
+        points = new ArrayList<CustomGeoPoint>();
     }
     public String getName() {
         return name;
+    }
+
+    public String getDataCash() {
+        return dataCash;
+    }
+
+    public void setDataCash(String dataCash) {
+        this.dataCash = dataCash;
     }
 
     public void setName(String name) {
@@ -69,10 +90,6 @@ public class CityGuide {
         return imgUrl;
     }
 
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
-
     public byte getRating() {
         return rating;
     }
@@ -82,11 +99,7 @@ public class CityGuide {
     }
 
     public String getCasMaphUri() {
-        return cashMapUri;
-    }
-
-    public void setCasMaphUri(String cashMapUri) {
-        this.cashMapUri = cashMapUri;
+        return mapCash;
     }
 
     public Date getChanged() {
@@ -97,12 +110,20 @@ public class CityGuide {
         this.changed = changed;
     }
 
-    public CustomGeoPoint[] getPoints() {
+    public Collection<CustomGeoPoint> getPoints() {
         return points;
     }
 
-    public void setPoints(CustomGeoPoint[] points) {
-        this.points = points;
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public String getMapCash() {
+        return mapCash;
+    }
+
+    public void setMapCash(String mapCash) {
+        this.mapCash = mapCash;
     }
 
     public int getId() {
@@ -113,24 +134,29 @@ public class CityGuide {
         Id = id;
     }
 
-    public String getCashMapUri() {
-        return cashMapUri;
+
+    public void addPoint(CustomGeoPoint value) throws SQLException {
+        value.setCityGuide(this);
+        HelperFactory.getHelper().getCustomGeoPointDAO().create(value);
+        points.add(value);
     }
 
-    public void setCashMapUri(String cashMapUri) {
-        this.cashMapUri = cashMapUri;
+    public void removePoint(CustomGeoPoint value) throws SQLException {
+        points.remove(value);
+        HelperFactory.getHelper().getCustomGeoPointDAO().delete(value);
     }
 
     @Override
     public String toString() {
         return "CityGuide{" +
+                "id= "+Id+" "+
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", imgUrl='" + imgUrl + '\'' +
                 ", rating=" + rating +
-                ", cashMapUri='" + cashMapUri + '\'' +
+                ", mapCash='" + mapCash + '\'' +
                 ", changed=" + changed +
-                ", points=" + Arrays.toString(points) +
+                ", points=" + Arrays.toString(points.toArray()) +
                 "}\n";
     }
 }

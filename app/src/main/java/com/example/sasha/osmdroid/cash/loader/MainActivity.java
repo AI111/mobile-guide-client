@@ -2,19 +2,19 @@ package com.example.sasha.osmdroid.cash.loader;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.sasha.osmdroid.R;
 import com.example.sasha.osmdroid.types.CityGuide;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity {
     public static ArrayList<CityGuide> guides;
-// = new ArrayList<>(Arrays.asList(
+    // = new ArrayList<>(Arrays.asList(
 //            new CityGuide[]{new CityGuide("Odessa Ukraine", "The RecyclerView widget is a more advanced and flexible version of ListView. This widget is a container for displaying large data sets that can be scrolled very efficiently by maintaining a limited number of views. Use the RecyclerView widget when you have data collections whose elements change at runtime based on user action or network events."
 //                    , "https://lh6.googleusercontent.com/-hWrHTKA8dsg/UhdiOTmhNwI/AAAAAAAAA40/jCx8Hvd-3FU/w1203-h902-no/IMG_20130822_221423.JPG", (byte) 5, "urlCash","https://mega.co.nz/#!FEk2TIIb!rhlwEhAj-UC6KIsesfeqzqkyl560SbzSEhlvUu2_bEg"),
 //            new CityGuide("Odessa", "description", "https://lh5.googleusercontent.com/-hh-mJKr5C3E/U9Uuk4fsKhI/AAAAAAAADck/QaI_s6KbGrE/w1145-h859-no/IMG_20140727_175448.jpg", (byte) 5, "urlCash","mapCash"),
@@ -26,17 +26,16 @@ public class MainActivity extends ActionBarActivity {
     public static final String LOG_TAG = "OSM_DROID_TAG";
     public static DownloadListFragment listFragment;
 
-    TestFragment testFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_main);
-        testFragment = new TestFragment();
+        //testFragment = new TestFragment();
         listFragment = new DownloadListFragment();
-        listFragment.setGuides(guides);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, testFragment)
+                    .add(R.id.container, listFragment)
                     .commit();
         }
     }
@@ -59,14 +58,13 @@ public class MainActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.list_item:
-            listFragment.setGuides(guides);
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, listFragment).commit();
                 break;
             case R.id.item_clear_memory_cache:
-                ImageLoader.getInstance().clearMemoryCache();
+
+                Log.d(LOG_TAG, "item_clear_memory_cache");
                 return true;
             case R.id.item_clear_disc_cache:
-                ImageLoader.getInstance().clearDiskCache();
+
                 return true;
             default:
                 return false;

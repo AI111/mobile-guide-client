@@ -6,8 +6,6 @@
 
 
     <!-- UI ELEMENTS TEXT-->
-    <string name="download_data">Download data?</string>
-    <string name="download">DOWNLOAD</string>
     <string name="action_refresh">Refresh</string>
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
@@ -17,6 +15,14 @@
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
 
+
+    <!-- DOWNLAD FRAGMENT -->
+    <string name="no_connection">NO CONNECTION WITH SERVER</string>
+    <string name="download_data">Download data?</string>
+    <string name="download">DOWNLOAD</string>
+    <string name="update">UPDATE</string>
+    <string name="delete">DELETE</string>
+    <string name="net_error">NETWORK ERROR</string>
 
     <!-- PATH FOR SAVED FILES -->
     <string name="map_cash_path">/mnt/sdcard/osmdroid/</string>
