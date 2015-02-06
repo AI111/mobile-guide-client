@@ -39,4 +39,5 @@ dependencies {
     compile 'org.json:json:20141113'
     compile 'com.j256.ormlite:ormlite-android:4.48'
     compile 'com.squareup.picasso:picasso:2.4.0'
+    compile 'com.melnykov:floatingactionbutton:1.1.0'
 }

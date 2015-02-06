@@ -26,10 +26,19 @@ public class CityGuide {
     private String  name;
 
     @DatabaseField()
+    private double latitude;
+
+    @DatabaseField()
+    private  double longitude;
+
+    @DatabaseField()
     private String description;
 
     @DatabaseField()
     private String imgUrl;
+
+    @DatabaseField()
+    private String fullImgUrl;
 
     @DatabaseField()
     private byte rating;
@@ -48,14 +57,42 @@ public class CityGuide {
 
     public boolean installed;
 
-    public CityGuide(String name, String description, String imgUrl, byte rating, String mapCash,String dataCash, Date changed) {
+    public String getFullImgUrl() {
+        return fullImgUrl;
+    }
+
+    public void setFullImgUrl(String fullImgUrl) {
+        this.fullImgUrl = fullImgUrl;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public CityGuide(String name, double longitude, double latitude, String description, String imgUrl, String fullImgUrl, byte rating, String mapCash, String dataCash, Date changed) {
         this.name = name;
         this.description = description;
         this.imgUrl = imgUrl;
+        this.fullImgUrl = fullImgUrl;
         this.rating = rating;
         this.mapCash = mapCash;
         this.dataCash=dataCash;
         this.changed = changed;
+        this.latitude=latitude;
+        this.longitude=longitude;
+
         points = new ArrayList<CustomGeoPoint>();
     }
     public CityGuide(){
@@ -153,10 +190,11 @@ public class CityGuide {
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", imgUrl='" + imgUrl + '\'' +
+                ", ullImgUrl='"+fullImgUrl+'\''+
                 ", rating=" + rating +
                 ", mapCash='" + mapCash + '\'' +
                 ", changed=" + changed +
-                ", points=" + Arrays.toString(points.toArray()) +
+                ", points=\n" + Arrays.toString(points.toArray()) +
                 "}\n";
     }
 }

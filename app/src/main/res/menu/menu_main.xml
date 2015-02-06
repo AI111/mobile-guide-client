@@ -11,5 +11,16 @@
         android:title="set ip"
         android:orderInCategory="100"
         app:showAsAction="never" />
-
+    <item android:id="@+id/clear_db"
+          android:title="clear db"
+          android:orderInCategory="100"
+          app:showAsAction="never" />
+    <item android:id="@+id/show_db"
+          android:title="show db"
+          android:orderInCategory="100"
+          app:showAsAction="never" />
+    <item android:id="@+id/clear_all"
+          android:title="update db"
+          android:orderInCategory="100"
+          app:showAsAction="never" />
 </menu>

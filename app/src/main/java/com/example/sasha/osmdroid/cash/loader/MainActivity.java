@@ -1,6 +1,8 @@
 package com.example.sasha.osmdroid.cash.loader;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -31,6 +33,12 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_main);
+        ActionBar mActionBar = getSupportActionBar();
+        mActionBar.setDisplayHomeAsUpEnabled(true);
+
+        final ColorDrawable cd = new ColorDrawable(getResources().getColor(R.color.primary));
+        mActionBar.setBackgroundDrawable(cd);
+
         //testFragment = new TestFragment();
         listFragment = new DownloadListFragment();
         if (savedInstanceState == null) {

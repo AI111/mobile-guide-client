@@ -1,64 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-    <ScrollView
+    <com.example.sasha.osmdroid.cash.loader.ScrollViewX
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="fill_parent"
+
         android:id="@+id/scrollView" >
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+
 
             <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="fill_parent">
 
                 <ImageView
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="250dp"
                     android:id="@+id/imageView3"
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/odessa"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:translationZ="5dp"/>
 
-                <TextView
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="NAME"
-                    android:id="@+id/textView9"
-                    android:layout_gravity="center_horizontal"
-                    android:padding="5dp"
-                    android:background="#70202020"
-                    android:textColor="#ffeeeeee"
-                    android:textStyle="bold"
-                    android:layout_alignBottom="@+id/imageView3"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:background="#ff3d34df"
+                    android:layout_below="@+id/fab_1"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
+                    android:layout_alignParentStart="true">
 
-                <TextView
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="NAME"
+                        android:id="@+id/textView9"
+                        android:padding="5dp"
+                        android:textColor="@color/primary_text"
+                        android:textIsSelectable="false"
+                        android:textSize="@dimen/detail_activity_title_size"
+                        android:layout_below="@+id/fab_1"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"/>
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Medium Text"
+                        android:id="@+id/textView10"
+                        android:textColor="@color/secondary_text"
+                        android:layout_gravity="left|center_vertical"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="20dp"/>
+                </LinearLayout>
+
+                <com.melnykov.fab.FloatingActionButton
+                    android:id="@+id/fab_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="5/5"
-                    android:id="@+id/textView11"
-                    android:layout_alignParentTop="true"
+                    fab:fab_colorNormal="@color/accent"
+                    fab:fab_colorPressed="@color/primary_dark"
+                    fab:fab_colorRipple="@color/accent"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
-                    android:textStyle="normal|bold"
-                    android:padding="5dp"
-                    android:textSize="20dp" />
+                    android:layout_alignBottom="@id/imageView3"
+                    android:layout_marginBottom="@dimen/floating_action_button_margin_normal_minus"
+                    android:layout_marginRight="@dimen/floating_action_button_margin_normal"
+ />
+
+
             </RelativeLayout>
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Medium Text"
-                android:id="@+id/textView10" />
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+    </com.example.sasha.osmdroid.cash.loader.ScrollViewX>
+
+</FrameLayout>

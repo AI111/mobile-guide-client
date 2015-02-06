@@ -3,4 +3,24 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="navigation_drawer_width">240dp</dimen>
+    <dimen name="detail_activity_title_size">28dp</dimen>
+    <dimen name="fab_elevation">8dp</dimen>
+    <dimen name="fab_press_translation_z">9dp</dimen>
+    <dimen name="fab_size">56dp</dimen>
+    <dimen name="fab_size_small">40dp</dimen>
+    <dimen name="fab_icon_size">24dp</dimen>
+    <color name="fab_color_1">#ff5252</color>
+    <color name="fab_color_1_muted">#ff8080</color>
+    <color name="fab_color_2">#9c27b0</color>
+    <color name="fab_color_2_muted">#a56ab0</color>
+
+
+    <dimen name="floating_action_button_size_normal">56dp</dimen>
+    <dimen name="floating_action_button_size_mini">40dp</dimen>
+    <dimen name="floating_action_button_elevation">4dp</dimen>
+    <dimen name="floating_action_button_shadow_radius">6dp</dimen>
+    <dimen name="floating_action_button_margin_normal">34dp</dimen>
+    <dimen name="floating_action_button_margin_normal_minus">-28dp</dimen>
+    <dimen name="floating_action_button_margin_mini">26dp</dimen>
+    <dimen name="floating_action_button_margin_mini_minus">-26dp</dimen>
 </resources>

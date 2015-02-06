@@ -61,7 +61,6 @@ public CustomGeoPoint(String title, PointType type, String description,
                 ", text='" + text + '\'' +
                 ", galery=" + Arrays.toString(galery) +
                 ", audio='" + audio + '\'' +
-              
                 "}\n";
     }
 }

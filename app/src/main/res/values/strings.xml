@@ -24,6 +24,10 @@
     <string name="delete">DELETE</string>
     <string name="net_error">NETWORK ERROR</string>
 
+    <!-- DETAIL CITY ACTiVITY -->
+    <string name="description">Description: </string>
+    <string name="rating">Reting: </string>
+
     <!-- PATH FOR SAVED FILES -->
     <string name="map_cash_path">/mnt/sdcard/osmdroid/</string>
     <string name="data_cash_path">/mnt/sdcard/osmdroid/</string>
