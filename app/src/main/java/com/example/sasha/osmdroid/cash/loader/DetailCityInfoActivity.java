@@ -1,95 +1,95 @@
 package com.example.sasha.osmdroid.cash.loader;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
+
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.text.Html;
 import android.transition.Transition;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sasha.osmdroid.R;
+import com.example.sasha.osmdroid.database.HelperFactory;
+import com.example.sasha.osmdroid.mega.Mega;
+import com.example.sasha.osmdroid.types.CityGuide;
+import com.example.sasha.osmdroid.types.CustomGeoPoint;
+import com.j256.ormlite.table.TableUtils;
+import com.melnykov.fab.FloatingActionButton;
+import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 /**
  * Created by sasha on 12/22/14.
  */
-public class DetailCityInfoActivity extends ActionBarActivity {
+public class DetailCityInfoActivity extends ActionBarActivity implements View.OnClickListener {
     ImageView imageView;
     TextView name;
     TextView descriptiionView;
-    TextView rating;
     ActionBar mActionBar;
-
-    public static final String EXTRA_PARAM_ID = "detail:_id";
-
-    // View name of the header image. Used for activity scene transitions
+    CityGuide guide;
+    public  final static String SER_KEY = "com.example.sasha.osmdroid.types.ser";
     public static final String VIEW_NAME_HEADER_IMAGE = "detail:header:image";
-
-    // View name of the header title. Used for activity scene transitions
     public static final String VIEW_NAME_HEADER_TITLE = "detail:header:title";
-    public static final String VIEW_DESCRIPTION = "detail:header:description";
-    public static final String VIEW_SMALL_IMAGE = "detail:header:smImg";
-    public static final String VIEW_IMAGE = "detail:header:image";
-    String img, smallImg, description, title;
-    private int maxDist;
+
+    private int maxDist,minDist = 0,DX;
+    private FloatingActionButton mFab;
+    private boolean mFabIsShown=true;
+    private int VER_SDK;
+    private int id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.detail_city_activity);
-        img = getIntent().getStringExtra(VIEW_IMAGE);
-        description = getIntent().getStringExtra(VIEW_DESCRIPTION);
-        title = getIntent().getStringExtra(VIEW_NAME_HEADER_TITLE);
-        smallImg = getIntent().getStringExtra(VIEW_SMALL_IMAGE);
-
+        guide = (CityGuide)getIntent().getSerializableExtra(SER_KEY);
         imageView = (ImageView) findViewById(R.id.imageView3);
-
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.setOnClickListener(this);
+        hideFab(false);
         name = (TextView) findViewById(R.id.textView9);
         descriptiionView = (TextView) findViewById(R.id.textView10);
-
-        name.setText(title);
-        descriptiionView.setText(description);
-
+        name.setText(guide.getName());
+        descriptiionView.setText(guide.getDescription());
+        if(guide.installed)mFab.setImageResource(R.drawable.delete);
         mActionBar = getSupportActionBar();
         mActionBar.setDisplayHomeAsUpEnabled(true);
-
-
-//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.black);
-//        final BitmapDrawable bd = new BitmapDrawable(bitmap);
         final ColorDrawable cd = new ColorDrawable(getResources().getColor(R.color.primary));
-
         mActionBar.setBackgroundDrawable(cd);
-
+        Log.d(MainActivity.LOG_TAG,"OBJECT "+guide);
         cd.setAlpha(0);
 
         mActionBar.setDisplayHomeAsUpEnabled(true); //to activate back pressed on home button press
         mActionBar.setDisplayShowHomeEnabled(false); //
 
-       // Picasso.with(this).load(img).into(imageView);
-        // BEGIN_INCLUDE(detail_set_view_name)
-        /**
-         * Set the name of the view's which will be transition to, using the static values above.
-         * This could be done in the layout XML, but exposing it via static variables allows easy
-         * querying from other Activities
-         */
         ViewCompat.setTransitionName(imageView, VIEW_NAME_HEADER_IMAGE);
         ViewCompat.setTransitionName(name, VIEW_NAME_HEADER_TITLE);
-        //ViewCompat.setTransitionName(descriptiionView, VIEW_DESCRIPTION);
-        //ViewCompat.setTransitionName(rating, VIEW_RATING_HEADER_IMAGE);
-        // END_INCLUDE(detail_set_view_name)
         loadItem();
         ViewTreeObserver vto = imageView.getViewTreeObserver();
         vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
@@ -97,11 +97,12 @@ public class DetailCityInfoActivity extends ActionBarActivity {
                 imageView.getViewTreeObserver().removeOnPreDrawListener(this);
                 maxDist = imageView.getMeasuredHeight();
                 int finalWidth = imageView.getMeasuredWidth();
+                DX=maxDist/3*2;
                 Log.d(MainActivity.LOG_TAG,"Height: " + maxDist + " Width: " + finalWidth);
                 return true;
             }
         });
-        ScrollViewX scrollView = (ScrollViewX) findViewById(R.id.scrollView);
+        final ScrollViewX scrollView = (ScrollViewX) findViewById(R.id.scrollView);
         scrollView.setOnScrollViewListener(new ScrollViewX.OnScrollViewListener() {
 
             @Override
@@ -112,7 +113,6 @@ public class DetailCityInfoActivity extends ActionBarActivity {
 
             private int getAlphaforActionBar(int scrollY) {
                 Log.d(MainActivity.LOG_TAG,"T = "+scrollY+" H = "+maxDist);
-                int minDist = 0;
                 if(scrollY>maxDist){
                     return 255;
                 }
@@ -123,13 +123,63 @@ public class DetailCityInfoActivity extends ActionBarActivity {
                     int alpha = 0;
                     alpha = (int)  ((255.0/maxDist)*scrollY);
                     imageView.setTranslationY(scrollY/2);
+
+                    if(mFabIsShown&&scrollY>DX){
+                        hideFab(true);
+                    }else if(!mFabIsShown&&scrollY<=DX){
+                        showFab(true);
+                    }
+//                    if(scrollY<=DX){
+//                        float scale=(float)(DX-scrollY)/DX;
+//                        Log.d(MainActivity.LOG_TAG,"SCALE = "+scale);
+//                        mFab.setScaleY(scale);
+//                        mFab.setScaleX(scale);
+//                    }
                     return alpha;
                 }
             }
         });
 
     }
+    private void showFab(boolean animated) {
+        if (mFab == null) {
+            return;
+        }
+        if (!mFabIsShown) {
+            if (animated) {
+                ViewPropertyAnimator.animate(mFab).cancel();
+                ViewPropertyAnimator.animate(mFab).scaleX(1).scaleY(1).setDuration(200).start();
+            } else {
+                mFab.setScaleX(1);
+                mFab.setScaleY(1);
+            }
+            mFabIsShown = true;
+        } else {
+            // Ensure that FAB is shown
+            mFab.setScaleX(1);
+            mFab.setScaleY(1);
+        }
+    }
 
+    private void hideFab(boolean animated) {
+        if (mFab == null) {
+            return;
+        }
+        if (mFabIsShown) {
+            if (animated) {
+                ViewPropertyAnimator.animate(mFab).cancel();
+                ViewPropertyAnimator.animate(mFab).scaleX(0).scaleY(0).setDuration(200).start();
+            } else {
+                mFab.setScaleX(0);
+                mFab.setScaleY(0);
+            }
+            mFabIsShown = false;
+        } else {
+            // Ensure that FAB is hidden
+            mFab.setScaleX(0);
+            mFab.setScaleY(0);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -139,47 +189,71 @@ public class DetailCityInfoActivity extends ActionBarActivity {
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         switch (id) {
-            case R.id.list_item:
+
+            case R.id.clear_db:
+                try {
+                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), CityGuide.class);
+                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), CustomGeoPoint.class);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 break;
-            case R.id.item_clear_memory_cache:
+            case R.id.show_db:
+                try {
+                    Log.d(MainActivity.LOG_TAG,"\n DB = " + HelperFactory.getHelper().getCityGuideDAO().getAllCities() + "\n----------\n" + HelperFactory.getHelper().getCustomGeoPointDAO().getAllPoints());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.update_db:
+                try {
+                    TableUtils.dropTable(HelperFactory.getHelper().getConnectionSource(),CityGuide.class,true);
+                    TableUtils.dropTable(HelperFactory.getHelper().getConnectionSource(), CustomGeoPoint.class,true);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
 
-                Log.d(MainActivity.LOG_TAG, "item_clear_memory_cache");
-                return true;
-            case R.id.item_clear_disc_cache:
-
-                return true;
+                try {
+                    TableUtils.createTable(HelperFactory.getHelper().getConnectionSource(), CityGuide.class);
+                    TableUtils.createTable(HelperFactory.getHelper().getConnectionSource(), CustomGeoPoint.class);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                break;
             case android.R.id.home:
                 onBackPressed();
-                return true;
+                break;
             default:
-                return false;
+                break;
         }
-
 
         return super.onOptionsItemSelected(item);
     }
-    private void loadItem() {
-        // Set the title TextView to the item's name and author
-      //  mHeaderTitle.setText(getString(R.string.image_header, mItem.getName(), mItem.getAuthor()));
 
+    @Override
+    public void onBackPressed() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            hideFab(false);
+        super.onBackPressed();
+    }
+
+    private void loadItem() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && addTransitionListener()) {
 
             loadThumbnail();
         } else {
 
             loadFullSizeImage();
+            showFab(true);
         }
     }
     private void loadThumbnail() {
         Picasso.with(imageView.getContext())
-                .load(smallImg)
+                .load(guide.getImgUrl())
                 .noFade()
                 .into(imageView);
     }
@@ -187,11 +261,11 @@ public class DetailCityInfoActivity extends ActionBarActivity {
 
     private void loadFullSizeImage() {
         Picasso.with(imageView.getContext())
-                .load(img)
+                .load(guide.getFullImgUrl())
                 .noFade()
                 .noPlaceholder()
                 .into(imageView);
-     }
+    }
     private boolean addTransitionListener() {
         final Transition transition = getWindow().getSharedElementEnterTransition();
 
@@ -202,6 +276,7 @@ public class DetailCityInfoActivity extends ActionBarActivity {
                 public void onTransitionEnd(Transition transition) {
                     // As the transition has ended, we can now load the full-size image
                     loadFullSizeImage();
+                    showFab(true);
 
                     // Make sure we remove ourselves as a listener
                     transition.removeListener(this);
@@ -231,5 +306,169 @@ public class DetailCityInfoActivity extends ActionBarActivity {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onClick(View view) {
+        Log.d(MainActivity.LOG_TAG,"FAB OnClick");
+        switch (view.getId()){
+            case R.id.fab:
+                if(guide.installed){
+                    new CashRemover().execute(guide);
+                }else{
+                    new CashDownloader().execute(guide);
+                }
+                break;
+        }
+
+    }
+
+    private class CashDownloader extends AsyncTask<CityGuide, String, Boolean> {
+        NotificationManager mNotifyManager;
+        Notification.Builder mBuilder;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mNotifyManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+            mBuilder = new Notification.Builder(getApplicationContext());
+            mBuilder.setContentTitle("Picture Download")
+                    .setContentText("Download in progress")
+                    .setSmallIcon(R.drawable.png)
+                    .setOngoing(true);
+        }
+
+        public void updateList() {
+
+        }
+
+        @Override
+        protected Boolean doInBackground(CityGuide... index) {
+            Log.v(MainActivity.LOG_TAG ,"doInBackground"+index[0]);
+            Log.v(MainActivity.LOG_TAG ,"doInBackground");
+            for (CityGuide city : index) {
+                Mega mega = new Mega();
+                mBuilder.setProgress(0, 0, true);
+                mNotifyManager.notify(id, mBuilder.build());
+                try {
+                    Log.d(MainActivity.LOG_TAG, "MEGA LINK " + city.getMapCash());
+                    //     mega.download(city.getCasMaphUri(), getString(R.string.map_cash_path));
+                    //download maps cash from MEGA server
+                    RestTemplate restTemplate = new RestTemplate();
+                    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                    CustomGeoPoint[] geoPoints = restTemplate.getForObject(DownloadListFragment.url+"getPoints?id=2"+city.getId(), CustomGeoPoint[].class);
+                    //download data structure
+                    for (CustomGeoPoint point : geoPoints) {
+                        city.addPoint(point);
+                    }
+
+                    HelperFactory.getHelper().getCityGuideDAO().create(city);
+                    city.installed = true;
+
+                    //save data structure in database
+
+                    //download audio foto and text for use with structure
+
+//                } catch (NoSuchAlgorithmException e) {
+//                    e.printStackTrace();
+//                } catch (NoSuchPaddingException e) {
+//                    e.printStackTrace();
+//                } catch (InvalidKeyException e) {
+//                    e.printStackTrace();
+//                } catch (InvalidAlgorithmParameterException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                } catch (IllegalBlockSizeException e) {
+//                    e.printStackTrace();
+//                } catch (BadPaddingException e) {
+//                    e.printStackTrace();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    // Toast.makeText(getActivity(), getString(R.string.net_error), Toast.LENGTH_LONG).show();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // Toast.makeText(getActivity(), getString(R.string.net_error), Toast.LENGTH_LONG).show();
+                }
+            }
+            return true;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean complete) {
+            super.onPostExecute(complete);
+            if(complete) {
+                mBuilder.setContentText("Download complete")
+                        // Removes the progress bar
+                        .setProgress(0, 0, false)
+                        .setOngoing(false);
+                mFab.setImageResource(R.drawable.delete);
+            }else{
+                mBuilder.setContentText("Download error")
+                        // Removes the progress bar
+                        .setProgress(0, 0, false)
+                        .setOngoing(false);
+            }
+
+            mNotifyManager.notify(id, mBuilder.build());
+
+        }
+    }
+    private class CashRemover extends AsyncTask<CityGuide, String, Boolean> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        @Override
+        protected Boolean doInBackground(CityGuide... index) {
+            for (CityGuide city : index) {
+
+                try {
+
+                    city.removeAllPoint();
+//                    for(CustomGeoPoint point:guide.points){
+//                        city.removePoint(point);
+//                        HelperFactory.getHelper().getCustomGeoPointDAO().
+//                    }
+                    HelperFactory.getHelper().getCityGuideDAO().delete(city);
+                    city.installed = false;
+
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    // Toast.makeText(getActivity(), getString(R.string.net_error), Toast.LENGTH_LONG).show();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // Toast.makeText(getActivity(), getString(R.string.net_error), Toast.LENGTH_LONG).show();
+                }
+            }
+            return true;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean complete) {
+            super.onPostExecute(complete);
+            mFab.setImageResource(R.drawable.download);
+
+
+        }
     }
 }

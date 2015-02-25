@@ -4,6 +4,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="navigation_drawer_width">240dp</dimen>
     <dimen name="detail_activity_title_size">28dp</dimen>
+    <dimen name="detail_activity_description_size">16dp</dimen>
+
     <dimen name="fab_elevation">8dp</dimen>
     <dimen name="fab_press_translation_z">9dp</dimen>
     <dimen name="fab_size">56dp</dimen>
@@ -15,6 +17,9 @@
     <color name="fab_color_2_muted">#a56ab0</color>
 
 
+
+
+    <dimen name="margin_standard">16dp</dimen>
     <dimen name="floating_action_button_size_normal">56dp</dimen>
     <dimen name="floating_action_button_size_mini">40dp</dimen>
     <dimen name="floating_action_button_elevation">4dp</dimen>

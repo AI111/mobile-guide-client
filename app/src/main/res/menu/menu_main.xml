@@ -3,10 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity" >
 
-    <item android:id="@+id/action_request"
-        android:title="update"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
     <item android:id="@+id/set_ip"
         android:title="set ip"
         android:orderInCategory="100"
@@ -19,7 +15,7 @@
           android:title="show db"
           android:orderInCategory="100"
           app:showAsAction="never" />
-    <item android:id="@+id/clear_all"
+    <item android:id="@+id/update_db"
           android:title="update db"
           android:orderInCategory="100"
           app:showAsAction="never" />

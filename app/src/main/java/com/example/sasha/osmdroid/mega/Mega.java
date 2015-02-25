@@ -20,7 +20,7 @@ import java.security.NoSuchAlgorithmException;
 public class Mega {
     private String email, password, sid;
     private int sequence_number;
-    public void download(String url, String path) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IOException, IllegalBlockSizeException, BadPaddingException, JSONException {
+    public String download(String url, String path) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IOException, IllegalBlockSizeException, BadPaddingException, JSONException {
         //TODO DOWNLOAD mismatch?
         System.out.println("Download started");
         String[] s = url.split("!");
@@ -87,6 +87,7 @@ public class Mega {
             }
         }
         System.out.print("Download finished");
+        return file_name;
     }
 
     private String api_request(String data) {

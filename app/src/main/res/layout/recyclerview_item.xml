@@ -15,7 +15,7 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:padding="3dp">
 
             <ImageView
@@ -41,7 +41,8 @@
                 android:textColor="@color/primary_text"
                 android:layout_below="@+id/imageView2"
                 android:layout_alignLeft="@+id/imageView2"
-                android:layout_alignStart="@+id/imageView2"/>
+                android:layout_alignStart="@+id/imageView2"
+                android:layout_marginLeft="5dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -53,17 +54,20 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:maxLines="1"
-                android:textColor="@color/secondary_text"/>
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/detail_activity_description_size"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"/>
 
-            <TextView
+            <RatingBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="rating"
-                android:id="@+id/textView4"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                android:id="@+id/ratingBar"
+                android:layout_below="@+id/textView3"
+                style="@style/smalldRatingBar"
+                android:isIndicator="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"/>
 
             <Button
                 android:layout_width="wrap_content"
@@ -79,7 +83,19 @@
                 android:background="#00ffffff"
                 android:textColor="@color/accent"
                 android:textStyle="bold"
-                android:layout_marginLeft="5dp" />
+                android:layout_marginLeft="5dp"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView4"
+                android:src="@drawable/checked_24"
+                android:layout_alignTop="@+id/ratingBar"
+                android:layout_alignRight="@+id/textView2"
+                android:layout_alignEnd="@+id/textView2"
+                android:layout_marginRight="5dp"
+                android:visibility="gone"/>
 
         </RelativeLayout>
 

@@ -23,5 +23,11 @@
         <!-- Support library compatibility -->
     </style>
 
+    <style name="smalldRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/ratingstars</item>
+        <item name="android:minHeight">16dp</item>
+        <item name="android:maxHeight">16dp</item>
+    </style>
+
 
 </resources>

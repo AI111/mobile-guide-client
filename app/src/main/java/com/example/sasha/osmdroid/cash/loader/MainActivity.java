@@ -77,8 +77,6 @@ public class MainActivity extends ActionBarActivity {
             default:
                 return false;
         }
-
-
         return super.onOptionsItemSelected(item);
     }
 

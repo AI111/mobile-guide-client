@@ -6,6 +6,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,8 +18,9 @@ import java.util.Date;
  * Created by sasha on 12/21/14.
  */
 @DatabaseTable(tableName = "cities")
-public class CityGuide {
-
+public class CityGuide implements Serializable{
+    private static final long serialVersionUID = -7060210544600464481L;
+    public boolean installed;
     @DatabaseField(id = true,canBeNull = false)
     private int Id;
 
@@ -41,7 +43,7 @@ public class CityGuide {
     private String fullImgUrl;
 
     @DatabaseField()
-    private byte rating;
+    private float rating;
 
     @DatabaseField()
     private String mapCash;
@@ -55,8 +57,24 @@ public class CityGuide {
     @ForeignCollectionField(eager = true)
     public Collection<CustomGeoPoint> points;// = new ArrayList<CustomGeoPoint>();
 
-    public boolean installed;
+    public CityGuide(String name, double longitude, double latitude, String description, String imgUrl, String fullImgUrl, float rating, String mapCash, String dataCash, Date changed) {
+        this.name = name;
+        this.description = description;
+        this.imgUrl = imgUrl;
+        this.fullImgUrl = fullImgUrl;
+        this.rating = rating;
+        this.mapCash = mapCash;
+        this.dataCash=dataCash;
+        this.changed = changed;
+        this.latitude=latitude;
+        this.longitude=longitude;
 
+        points = new ArrayList<CustomGeoPoint>();
+    }
+    public CityGuide(){
+        super();
+        points = new ArrayList<CustomGeoPoint>();
+    }
     public String getFullImgUrl() {
         return fullImgUrl;
     }
@@ -81,24 +99,6 @@ public class CityGuide {
         this.longitude = longitude;
     }
 
-    public CityGuide(String name, double longitude, double latitude, String description, String imgUrl, String fullImgUrl, byte rating, String mapCash, String dataCash, Date changed) {
-        this.name = name;
-        this.description = description;
-        this.imgUrl = imgUrl;
-        this.fullImgUrl = fullImgUrl;
-        this.rating = rating;
-        this.mapCash = mapCash;
-        this.dataCash=dataCash;
-        this.changed = changed;
-        this.latitude=latitude;
-        this.longitude=longitude;
-
-        points = new ArrayList<CustomGeoPoint>();
-    }
-    public CityGuide(){
-        super();
-        points = new ArrayList<CustomGeoPoint>();
-    }
     public String getName() {
         return name;
     }
@@ -127,7 +127,7 @@ public class CityGuide {
         return imgUrl;
     }
 
-    public byte getRating() {
+    public float getRating() {
         return rating;
     }
 
@@ -181,6 +181,10 @@ public class CityGuide {
     public void removePoint(CustomGeoPoint value) throws SQLException {
         points.remove(value);
         HelperFactory.getHelper().getCustomGeoPointDAO().delete(value);
+    }
+    public void removeAllPoint() throws SQLException {
+        HelperFactory.getHelper().getCustomGeoPointDAO().delete(points);
+        points.clear();
     }
 
     @Override

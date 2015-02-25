@@ -22,16 +22,15 @@
                     android:id="@+id/imageView3"
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/odessa"
-                    android:scaleType="centerCrop"
-                    android:translationZ="5dp"/>
+                    android:scaleType="centerCrop"/>
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:background="#ff3d34df"
-                    android:layout_below="@+id/fab_1"
+                    android:background="#ffdfdfdf"
+                    android:layout_below="@+id/imageView3"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true">
 
@@ -55,27 +54,34 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="Medium Text"
                         android:id="@+id/textView10"
+                        android:layout_below="@+id/textView9"
                         android:textColor="@color/secondary_text"
                         android:layout_gravity="left|center_vertical"
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
-                        android:layout_marginTop="20dp"/>
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="5dp"
+                        android:textSize="@dimen/detail_activity_description_size"
+                        android:layout_marginBottom="20dp"/>
                 </LinearLayout>
 
                 <com.melnykov.fab.FloatingActionButton
-                    android:id="@+id/fab_1"
+                    android:id="@+id/fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:src="@drawable/download"
                     fab:fab_colorNormal="@color/accent"
                     fab:fab_colorPressed="@color/primary_dark"
                     fab:fab_colorRipple="@color/accent"
                     android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentEnd="false"
                     android:layout_alignBottom="@id/imageView3"
                     android:layout_marginBottom="@dimen/floating_action_button_margin_normal_minus"
                     android:layout_marginRight="@dimen/floating_action_button_margin_normal"
- />
+                    android:tint="vbn"/>
+
 
 
             </RelativeLayout>

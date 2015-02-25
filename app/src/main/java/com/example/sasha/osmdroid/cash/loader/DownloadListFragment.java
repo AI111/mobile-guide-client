@@ -25,8 +25,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.sasha.osmdroid.R;
 import com.example.sasha.osmdroid.database.HelperFactory;
@@ -63,7 +63,7 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
     private ArrayList<CityGuide> guides = new ArrayList<>();
     private TextView errorMsg;
     int id = 1;
-    private static String url = "http://192.168.0.101:8080";
+    public static String url = "http://192.168.0.101:8080";
 
     //    public static final CityGuide[] cities = new CityGuide[]{
 //
@@ -215,10 +215,9 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
     public void onClickItem(View rootView, View view, final int position) {
         if (view.getId() == R.id.imageView2) {
             Intent intent = new Intent(getActivity(), DetailCityInfoActivity.class);
-            intent.putExtra(DetailCityInfoActivity.VIEW_NAME_HEADER_TITLE, guides.get(position).getName());
-            intent.putExtra(DetailCityInfoActivity.VIEW_DESCRIPTION, guides.get(position).getDescription());
-            intent.putExtra(DetailCityInfoActivity.VIEW_IMAGE,guides.get(position).getFullImgUrl());
-            intent.putExtra(DetailCityInfoActivity.VIEW_SMALL_IMAGE,guides.get(position).getImgUrl());
+            Bundle bundle  = new Bundle();
+            bundle.putSerializable(DetailCityInfoActivity.SER_KEY,guides.get(position));
+            intent.putExtras(bundle);
             ActivityOptionsCompat activityOptions =
                     ActivityOptionsCompat.makeSceneTransitionAnimation(
                             getActivity()
@@ -230,24 +229,6 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
 //                                    DetailCityInfoActivity.VIEW_DESCRIPTION)
                     );
             ActivityCompat.startActivity(getActivity(), intent, activityOptions.toBundle());
-        } else if (view.getId() == R.id.button) {
-            //  Toast.makeText(getActivity(),"DOWNLOAD"+position+"   "+view.getId(),Toast.LENGTH_SHORT).show();
-            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setTitle("Alert");
-            alertDialog.setMessage(getString(R.string.download_data));
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            new CashDownloader().execute(position);
-                        }
-                    });
-            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancle",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-            alertDialog.show();
         }
     }
 
@@ -274,10 +255,9 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
         public void onBindViewHolder(MyViewHolder viewHolder, int i) {
             viewHolder.name.setText(citys.get(i).getName());
             viewHolder.description.setText(citys.get(i).getDescription());
-            viewHolder.rating.setText(citys.get(i).getRating() + " / 5");
-            viewHolder.download.setText(citys.get(i).installed ? getString(R.string.delete) : getString(R.string.download));
+            viewHolder.ratingBar.setRating(citys.get(i).getRating());
+            viewHolder.installed.setVisibility(citys.get(i).installed?View.VISIBLE:View.GONE);
             Log.d(MainActivity.LOG_TAG, " onBindViewHolder URL  " + citys.get(i).installed);
-
             Picasso.with(getActivity()).load(citys.get(i).getImgUrl()).error(R.drawable.minus).into(viewHolder.image);
         }
 
@@ -321,11 +301,11 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
     }
 
     private class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private Button download;
         private TextView name;
         private TextView description;
-        private TextView rating;
+        private RatingBar ratingBar;
         private ImageView image;
+        private ImageView installed;
         OnItemClicklistener onItemClicklistener;
         View itemView;
 
@@ -334,12 +314,11 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
             super(itemView);
             this.itemView = itemView;
             image = (ImageView) itemView.findViewById(R.id.imageView2);
+            installed = (ImageView) itemView.findViewById(R.id.imageView4);
             this.onItemClicklistener = onItemClicklistener;
             name = (TextView) itemView.findViewById(R.id.textView2);
             description = (TextView) itemView.findViewById(R.id.textView3);
-            rating = (TextView) itemView.findViewById(R.id.textView4);
-            download = (Button) itemView.findViewById(R.id.button);
-            download.setOnClickListener(this);
+            ratingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
             image.setOnClickListener(this);
 
         }
@@ -350,99 +329,6 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
 
             // if (onItemClicklistener != null)
             onItemClicklistener.onClickItem(itemView, view, getPosition());
-
-        }
-    }
-
-    private class CashDownloader extends AsyncTask<Integer, Integer, Integer[]> {
-        NotificationManager mNotifyManager;
-        Notification.Builder mBuilder;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mNotifyManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-
-            mBuilder = new Notification.Builder(getActivity());
-            mBuilder.setContentTitle("Picture Download")
-                    .setContentText("Download in progress")
-                    .setSmallIcon(R.drawable.png)
-                    .setOngoing(true);
-        }
-
-        public void updateList() {
-
-        }
-
-        @Override
-        protected Integer[] doInBackground(Integer... index) {
-            Log.v(MainActivity.LOG_TAG ,"doInBackground");
-            for (int i : index) {
-                Mega mega = new Mega();
-                mBuilder.setProgress(0, 0, true);
-                mNotifyManager.notify(id, mBuilder.build());
-                try {
-                    Log.d(MainActivity.LOG_TAG, "MEGA LINK " + guides.get(i).getMapCash());
-                    mega.download(guides.get(i).getCasMaphUri(), getString(R.string.map_cash_path));
-                    //download maps cash from MEGA server
-                    RestTemplate restTemplate = new RestTemplate();
-                    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                    CustomGeoPoint[] geoPoints = restTemplate.getForObject(url+"getPoints?id=2"+guides.get(i).getId(), CustomGeoPoint[].class);
-                    //download data structure
-                    for (CustomGeoPoint point : geoPoints) {
-                            guides.get(i).addPoint(point);
-                     }
-
-                        HelperFactory.getHelper().getCityGuideDAO().create(guides.get(i));
-                        guides.get(i).installed = true;
-
-                    //save data structure in database
-
-                    //download audio foto and text for use with structure
-
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                } catch (NoSuchPaddingException e) {
-                    e.printStackTrace();
-                } catch (InvalidKeyException e) {
-                    e.printStackTrace();
-                } catch (InvalidAlgorithmParameterException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (IllegalBlockSizeException e) {
-                    e.printStackTrace();
-                } catch (BadPaddingException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    // Toast.makeText(getActivity(), getString(R.string.net_error), Toast.LENGTH_LONG).show();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                   // Toast.makeText(getActivity(), getString(R.string.net_error), Toast.LENGTH_LONG).show();
-                }
-            }
-            return index;
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        protected void onPostExecute(Integer[] index) {
-            super.onPostExecute(index);
-            for(int i : index) mAdapter.notifyItemChanged(i);
-
-            mBuilder.setContentText("Download complete")
-                    // Removes the progress bar
-                    .setProgress(0, 0, false)
-                    .setOngoing(false);
-            mNotifyManager.notify(id, mBuilder.build());
 
         }
     }
