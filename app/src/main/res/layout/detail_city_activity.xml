@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
@@ -72,15 +73,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/download"
-                    fab:fab_colorNormal="@color/accent"
-                    fab:fab_colorPressed="@color/primary_dark"
-                    fab:fab_colorRipple="@color/accent"
+                    app:fab_colorNormal="@color/accent"
+                    app:fab_colorPressed="@color/primary_dark"
+                    app:fab_colorRipple="@color/accent"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="false"
                     android:layout_alignBottom="@id/imageView3"
                     android:layout_marginBottom="@dimen/floating_action_button_margin_normal_minus"
                     android:layout_marginRight="@dimen/floating_action_button_margin_normal"
-                    android:tint="vbn"/>
+                    />
 
 
 
