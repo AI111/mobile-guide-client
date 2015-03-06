@@ -30,36 +30,26 @@ import com.melnykov.fab.FloatingActionButton;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 /**
  * Created by sasha on 12/22/14.
  */
 public class DetailCityInfoActivity extends ActionBarActivity implements View.OnClickListener {
+    public final static String SER_KEY = "com.example.sasha.osmdroid.types.ser";
+    public static final String VIEW_NAME_HEADER_IMAGE = "detail:header:image";
+    public static final String VIEW_NAME_HEADER_TITLE = "detail:header:title";
     ImageView imageView;
     TextView name;
     TextView descriptiionView;
     ActionBar mActionBar;
     CityGuide guide;
-    public  final static String SER_KEY = "com.example.sasha.osmdroid.types.ser";
-    public static final String VIEW_NAME_HEADER_IMAGE = "detail:header:image";
-    public static final String VIEW_NAME_HEADER_TITLE = "detail:header:title";
-
-    private int maxDist,minDist = 0,DX;
+    private int maxDist, minDist = 0, DX;
     private FloatingActionButton mFab;
-    private boolean mFabIsShown=true;
+    private boolean mFabIsShown = true;
     private int VER_SDK;
     private int id;
 
@@ -68,8 +58,9 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.detail_city_activity);
-        guide = (CityGuide)getIntent().getSerializableExtra(SER_KEY);
+        guide = (CityGuide) getIntent().getSerializableExtra(SER_KEY);
         imageView = (ImageView) findViewById(R.id.imageView3);
+        imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         mFab.setOnClickListener(this);
         hideFab(false);
@@ -77,12 +68,12 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
         descriptiionView = (TextView) findViewById(R.id.textView10);
         name.setText(guide.getName());
         descriptiionView.setText(guide.getDescription());
-        if(guide.installed)mFab.setImageResource(R.drawable.delete);
+        if (guide.installed) mFab.setImageResource(R.drawable.ic_delete_black_24dp);
         mActionBar = getSupportActionBar();
         mActionBar.setDisplayHomeAsUpEnabled(true);
         final ColorDrawable cd = new ColorDrawable(getResources().getColor(R.color.primary));
         mActionBar.setBackgroundDrawable(cd);
-        Log.d(MainActivity.LOG_TAG,"OBJECT "+guide);
+        Log.d(MainActivity.LOG_TAG, "OBJECT " + guide);
         cd.setAlpha(0);
 
         mActionBar.setDisplayHomeAsUpEnabled(true); //to activate back pressed on home button press
@@ -97,8 +88,8 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
                 imageView.getViewTreeObserver().removeOnPreDrawListener(this);
                 maxDist = imageView.getMeasuredHeight();
                 int finalWidth = imageView.getMeasuredWidth();
-                DX=maxDist/3*2;
-                Log.d(MainActivity.LOG_TAG,"Height: " + maxDist + " Width: " + finalWidth);
+                DX = maxDist / 3 * 2;
+                Log.d(MainActivity.LOG_TAG, "Height: " + maxDist + " Width: " + finalWidth);
                 return true;
             }
         });
@@ -112,21 +103,19 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
             }
 
             private int getAlphaforActionBar(int scrollY) {
-                Log.d(MainActivity.LOG_TAG,"T = "+scrollY+" H = "+maxDist);
-                if(scrollY>maxDist){
+                Log.d(MainActivity.LOG_TAG, "T = " + scrollY + " H = " + maxDist);
+                if (scrollY > maxDist) {
                     return 255;
-                }
-                else if(scrollY<minDist){
+                } else if (scrollY < minDist) {
                     return 0;
-                }
-                else {
+                } else {
                     int alpha = 0;
-                    alpha = (int)  ((255.0/maxDist)*scrollY);
-                    imageView.setTranslationY(scrollY/2);
+                    alpha = (int) ((255.0 / maxDist) * scrollY);
+                    imageView.setTranslationY(scrollY / 2);
 
-                    if(mFabIsShown&&scrollY>DX){
+                    if (mFabIsShown && scrollY > DX) {
                         hideFab(true);
-                    }else if(!mFabIsShown&&scrollY<=DX){
+                    } else if (!mFabIsShown && scrollY <= DX) {
                         showFab(true);
                     }
 //                    if(scrollY<=DX){
@@ -141,6 +130,31 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
         });
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(MainActivity.LOG_TAG, "onDestroy DetailActivityt");
+//        Picasso.with(this).cancelRequest(imageView);
+//        ((BitmapDrawable)imageView.getDrawable()).getBitmap().recycle();
+//        imageView.setImageDrawable(null);
+
+//        imageView=null;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //imageView = (ImageView) findViewById(R.id.imageView3);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
+
     private void showFab(boolean animated) {
         if (mFab == null) {
             return;
@@ -187,6 +201,7 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -204,15 +219,15 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
                 break;
             case R.id.show_db:
                 try {
-                    Log.d(MainActivity.LOG_TAG,"\n DB = " + HelperFactory.getHelper().getCityGuideDAO().getAllCities() + "\n----------\n" + HelperFactory.getHelper().getCustomGeoPointDAO().getAllPoints());
+                    Log.d(MainActivity.LOG_TAG, "\n DB = " + HelperFactory.getHelper().getCityGuideDAO().getAllCities() + "\n----------\n" + HelperFactory.getHelper().getCustomGeoPointDAO().getAllPoints());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
                 break;
             case R.id.update_db:
                 try {
-                    TableUtils.dropTable(HelperFactory.getHelper().getConnectionSource(),CityGuide.class,true);
-                    TableUtils.dropTable(HelperFactory.getHelper().getConnectionSource(), CustomGeoPoint.class,true);
+                    TableUtils.dropTable(HelperFactory.getHelper().getConnectionSource(), CityGuide.class, true);
+                    TableUtils.dropTable(HelperFactory.getHelper().getConnectionSource(), CustomGeoPoint.class, true);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -236,7 +251,7 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
 
     @Override
     public void onBackPressed() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             hideFab(false);
         super.onBackPressed();
     }
@@ -251,6 +266,7 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
             showFab(true);
         }
     }
+
     private void loadThumbnail() {
         Picasso.with(imageView.getContext())
                 .load(guide.getImgUrl())
@@ -266,6 +282,7 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
                 .noPlaceholder()
                 .into(imageView);
     }
+
     private boolean addTransitionListener() {
         final Transition transition = getWindow().getSharedElementEnterTransition();
 
@@ -310,12 +327,12 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
 
     @Override
     public void onClick(View view) {
-        Log.d(MainActivity.LOG_TAG,"FAB OnClick");
-        switch (view.getId()){
+        Log.d(MainActivity.LOG_TAG, "FAB OnClick");
+        switch (view.getId()) {
             case R.id.fab:
-                if(guide.installed){
+                if (guide.installed) {
                     new CashRemover().execute(guide);
-                }else{
+                } else {
                     new CashDownloader().execute(guide);
                 }
                 break;
@@ -345,8 +362,8 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
 
         @Override
         protected Boolean doInBackground(CityGuide... index) {
-            Log.v(MainActivity.LOG_TAG ,"doInBackground"+index[0]);
-            Log.v(MainActivity.LOG_TAG ,"doInBackground");
+            Log.v(MainActivity.LOG_TAG, "doInBackground" + index[0]);
+            Log.v(MainActivity.LOG_TAG, "doInBackground");
             for (CityGuide city : index) {
                 Mega mega = new Mega();
                 mBuilder.setProgress(0, 0, true);
@@ -357,7 +374,7 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
                     //download maps cash from MEGA server
                     RestTemplate restTemplate = new RestTemplate();
                     restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                    CustomGeoPoint[] geoPoints = restTemplate.getForObject(DownloadListFragment.url+"getPoints?id=2"+city.getId(), CustomGeoPoint[].class);
+                    CustomGeoPoint[] geoPoints = restTemplate.getForObject(DownloadListFragment.url + "getPoints?id=2" + city.getId(), CustomGeoPoint[].class);
                     //download data structure
                     for (CustomGeoPoint point : geoPoints) {
                         city.addPoint(point);
@@ -406,13 +423,13 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
         @Override
         protected void onPostExecute(Boolean complete) {
             super.onPostExecute(complete);
-            if(complete) {
+            if (complete) {
                 mBuilder.setContentText("Download complete")
                         // Removes the progress bar
                         .setProgress(0, 0, false)
                         .setOngoing(false);
-                mFab.setImageResource(R.drawable.delete);
-            }else{
+                mFab.setImageResource(R.drawable.ic_delete_black_24dp);
+            } else {
                 mBuilder.setContentText("Download error")
                         // Removes the progress bar
                         .setProgress(0, 0, false)
@@ -423,6 +440,7 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
 
         }
     }
+
     private class CashRemover extends AsyncTask<CityGuide, String, Boolean> {
 
         @Override
@@ -466,7 +484,7 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
         @Override
         protected void onPostExecute(Boolean complete) {
             super.onPostExecute(complete);
-            mFab.setImageResource(R.drawable.download);
+            mFab.setImageResource(R.drawable.ic_play_download_black_24dp);
 
 
         }

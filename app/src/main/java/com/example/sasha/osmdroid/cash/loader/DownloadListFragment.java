@@ -2,9 +2,6 @@ package com.example.sasha.osmdroid.cash.loader;
 
 
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -22,7 +19,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -30,40 +26,30 @@ import android.widget.TextView;
 
 import com.example.sasha.osmdroid.R;
 import com.example.sasha.osmdroid.database.HelperFactory;
-import com.example.sasha.osmdroid.mega.Mega;
 import com.example.sasha.osmdroid.types.CityGuide;
 import com.example.sasha.osmdroid.types.CustomGeoPoint;
 import com.j256.ormlite.table.TableUtils;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 /**
  * Created by sasha on 12/21/14.
  */
 
 public class DownloadListFragment extends Fragment implements OnItemClicklistener {
-    private RecyclerView mRecyclerView;
-    private MyAdapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private ArrayList<CityGuide> guides = new ArrayList<>();
-    private TextView errorMsg;
-    int id = 1;
     public static String url = "http://192.168.0.101:8080";
+    protected RecyclerView mRecyclerView;
+    protected MyAdapter mAdapter;
+    protected RecyclerView.LayoutManager mLayoutManager;
+    protected ArrayList<CityGuide> guides = new ArrayList<>();
+    int id = 1;
+    private TextView errorMsg;
 
     //    public static final CityGuide[] cities = new CityGuide[]{
 //
@@ -84,11 +70,15 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
 
     }
 
+    protected void getData() {
+        new HttpRequestCytiesList().execute();
+    }
+
     @Override
     public void onStart() {
         super.onStart();
         Log.d(MainActivity.LOG_TAG, "onStart");
-        new HttpRequestCytiesList().execute();
+        getData();
     }
 
     @Override
@@ -158,14 +148,14 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
                 break;
             case R.id.show_db:
                 try {
-                    Log.d(MainActivity.LOG_TAG,"\n DB = " + HelperFactory.getHelper().getCityGuideDAO().getAllCities() + "\n----------\n" + HelperFactory.getHelper().getCustomGeoPointDAO().getAllPoints());
+                    Log.d(MainActivity.LOG_TAG, "\n DB = " + HelperFactory.getHelper().getCityGuideDAO().getAllCities() + "\n----------\n" + HelperFactory.getHelper().getCustomGeoPointDAO().getAllPoints());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
                 break;
             case R.id.clear_all:
                 try {
-                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(),CityGuide.class);
+                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), CityGuide.class);
                     TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), CustomGeoPoint.class);
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -215,25 +205,23 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
     public void onClickItem(View rootView, View view, final int position) {
         if (view.getId() == R.id.imageView2) {
             Intent intent = new Intent(getActivity(), DetailCityInfoActivity.class);
-            Bundle bundle  = new Bundle();
-            bundle.putSerializable(DetailCityInfoActivity.SER_KEY,guides.get(position));
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(DetailCityInfoActivity.SER_KEY, guides.get(position));
             intent.putExtras(bundle);
             ActivityOptionsCompat activityOptions =
                     ActivityOptionsCompat.makeSceneTransitionAnimation(
                             getActivity()
-                           ,new Pair<View, String>(rootView.findViewById(R.id.imageView2),
+                            , new Pair<View, String>(rootView.findViewById(R.id.imageView2),
                                     DetailCityInfoActivity.VIEW_NAME_HEADER_IMAGE),
                             new Pair<View, String>(rootView.findViewById(R.id.textView2),
                                     DetailCityInfoActivity.VIEW_NAME_HEADER_TITLE)
-//                         ,new Pair<View, String>(rootView.findViewById(R.id.textView3),
-//                                    DetailCityInfoActivity.VIEW_DESCRIPTION)
                     );
             ActivityCompat.startActivity(getActivity(), intent, activityOptions.toBundle());
         }
     }
 
 
-    private class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
+    protected class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         ArrayList<CityGuide> citys;
         OnItemClicklistener onItemClicklistener;
 
@@ -256,41 +244,42 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
             viewHolder.name.setText(citys.get(i).getName());
             viewHolder.description.setText(citys.get(i).getDescription());
             viewHolder.ratingBar.setRating(citys.get(i).getRating());
-            viewHolder.installed.setVisibility(citys.get(i).installed?View.VISIBLE:View.GONE);
+            viewHolder.installed.setVisibility(citys.get(i).installed ? View.VISIBLE : View.GONE);
             Log.d(MainActivity.LOG_TAG, " onBindViewHolder URL  " + citys.get(i).installed);
-            Picasso.with(getActivity()).load(citys.get(i).getImgUrl()).error(R.drawable.minus).into(viewHolder.image);
+            Picasso.with(getActivity()).load(citys.get(i).getImgUrl()).into(viewHolder.image);
         }
 
         @Override
         public void onViewRecycled(MyViewHolder holder) {
-            //((BitmapDrawable)holder.image.getDrawable()).getBitmap().recycle();
             Log.d(MainActivity.LOG_TAG, "onViewRecycled ");
-            holder.image.setImageDrawable(null);
+//            ((BitmapDrawable)holder.image.getDrawable()).getBitmap().recycle();
+//
+//            holder.image.setImageDrawable(null);
 
         }
 
         @Override
         public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
             super.onDetachedFromRecyclerView(recyclerView);
-          //  Log.d(MainActivity.LOG_TAG, "onDetachedFromRecyclerView ");
+            Log.d(MainActivity.LOG_TAG, "onDetachedFromRecyclerView ");
         }
 
         @Override
         public void onAttachedToRecyclerView(RecyclerView recyclerView) {
             super.onAttachedToRecyclerView(recyclerView);
-           // Log.d(MainActivity.LOG_TAG, "onAttachedToRecyclerView ");
+            // Log.d(MainActivity.LOG_TAG, "onAttachedToRecyclerView ");
         }
 
         @Override
         public void onViewAttachedToWindow(MyViewHolder holder) {
             super.onViewAttachedToWindow(holder);
-           // Log.d(MainActivity.LOG_TAG, "onViewAttachedToWindow ");
+            // Log.d(MainActivity.LOG_TAG, "onViewAttachedToWindow ");
         }
 
         @Override
         public void onViewDetachedFromWindow(MyViewHolder holder) {
             super.onViewDetachedFromWindow(holder);
-           // Log.d(MainActivity.LOG_TAG, "onViewDetachedFromWindow ");
+            // Log.d(MainActivity.LOG_TAG, "onViewDetachedFromWindow ");
         }
 
         @Override
@@ -300,14 +289,14 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
 
     }
 
-    private class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    protected class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        OnItemClicklistener onItemClicklistener;
+        View itemView;
         private TextView name;
         private TextView description;
         private RatingBar ratingBar;
         private ImageView image;
         private ImageView installed;
-        OnItemClicklistener onItemClicklistener;
-        View itemView;
 
 
         public MyViewHolder(View itemView, OnItemClicklistener onItemClicklistener) {
@@ -344,7 +333,7 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
 
         @Override
         protected ArrayList<CityGuide> doInBackground(Void... params) {
-            Log.v(MainActivity.LOG_TAG ,"doInBackground");
+            Log.v(MainActivity.LOG_TAG, "doInBackground");
             ArrayList<CityGuide> cityGuides = null;
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());

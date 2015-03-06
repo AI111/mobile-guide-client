@@ -15,7 +15,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -25,7 +24,6 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
-import com.github.ksoichiro.android.observablescrollview.Scrollable;
 import com.github.ksoichiro.android.observablescrollview.TouchInterceptionFrameLayout;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.view.ViewHelper;
@@ -33,11 +31,13 @@ import com.nineoldandroids.view.ViewPropertyAnimator;
 
 public class SlidingUpBaseActivity extends ActionBarActivity implements ObservableScrollViewCallbacks {
 
+    public static final String ID_TAG = "CITY_ID";
     private static final String STATE_SLIDING_STATE = "slidingState";
     private static final int SLIDING_STATE_TOP = 0;
     private static final int SLIDING_STATE_MIDDLE = 1;
     private static final int SLIDING_STATE_BOTTOM = 2;
-
+    private static final int NUM_OF_ITEMS = 100;
+    private static final int NUM_OF_ITEMS_FEW = 3;
     private View mHeader;
     private View mHeaderBar;
     private View mHeaderOverlay;
@@ -49,10 +49,7 @@ public class SlidingUpBaseActivity extends ActionBarActivity implements Observab
     private Toolbar mToolbar;
     private ObservableScrollView mScrollable;
     private TouchInterceptionFrameLayout mInterceptionLayout;
-
-    private Button button;
-
-    private int Height,Weight;
+    private int Height;
     // Fields that just keep constants like resource values
     private int mActionBarSize;
     private int mIntersectionHeight;
@@ -62,145 +59,14 @@ public class SlidingUpBaseActivity extends ActionBarActivity implements Observab
     private int mColorPrimary;
     private int mFlexibleSpaceImageHeight;
     private int mToolbarColor;
-    private int mFabMargin;
-
     // Fields that needs to saved
     private int mSlidingState;
-
     // Temporary states
     private boolean mFabIsShown;
     private boolean mMoved;
     private float mInitialY;
     private float mMovedDistanceY;
     private float mScrollYOnDownMotion;
-
-    // These flags are used for changing header colors.
-    private boolean mHeaderColorIsChanging;
-    private boolean mHeaderColorChangedToBottom;
-    private boolean mHeaderIsAtBottom;
-    private boolean mHeaderIsNotAtBottom;
-    private static final int NUM_OF_ITEMS = 100;
-    private static final int NUM_OF_ITEMS_FEW = 3;
-
-    protected int getScreenHeight() {
-
-        return findViewById(android.R.id.content).getHeight();
-    }
-    protected int getActionBarSize() {
-        TypedValue typedValue = new TypedValue();
-        int[] textSizeAttr = new int[]{R.attr.actionBarSize};
-        int indexOfAttrTextSize = 0;
-        TypedArray a = obtainStyledAttributes(typedValue.data, textSizeAttr);
-        int actionBarSize = a.getDimensionPixelSize(indexOfAttrTextSize, -1);
-        a.recycle();
-        return actionBarSize;
-    }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.test);
-
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        setSupportActionBar(mToolbar);
-        ViewHelper.setScaleY(mToolbar, 0);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("");
-
-        mToolbarColor = getResources().getColor(R.color.primary);
-        mToolbar.setBackgroundColor(Color.TRANSPARENT);
-        mToolbar.setTitle("");
-
-        mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
-        mIntersectionHeight = getResources().getDimensionPixelSize(R.dimen.intersection_height);
-        mHeaderBarHeight = getResources().getDimensionPixelSize(R.dimen.header_bar_height);
-        mSlidingSlop = getResources().getDimensionPixelSize(R.dimen.sliding_slop);
-        mActionBarSize = getActionBarSize();
-        mColorPrimary = getResources().getColor(R.color.primary);
-        mSlidingHeaderBlueSize = getResources().getDimensionPixelSize(R.dimen.sliding_overlay_blur_size);
-
-
-
-        mHeader = findViewById(R.id.header);
-        mHeaderBar = findViewById(R.id.header_bar);
-        mHeaderOverlay = findViewById(R.id.header_overlay);
-        mHeaderFlexibleSpace = findViewById(R.id.header_flexible_space);
-        mImageView = findViewById(R.id.image);
-        mImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                slideOnClick();
-            }
-        });
-        mScrollable = createScrollable();
-
-        mFab = findViewById(R.id.fab);
-        mFabMargin = getResources().getDimensionPixelSize(R.dimen.margin_standard);
-
-
-        DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
-        Height = metrics.heightPixels;
-        Weight = metrics.widthPixels;
-
-        mInterceptionLayout = (TouchInterceptionFrameLayout) findViewById(R.id.scroll_wrapper);
-        mInterceptionLayout.setScrollInterceptionListener(mInterceptionListener);
-        mTitle = (TextView) findViewById(R.id.title);
-        mTitle.setText(getTitle());
-        mToolbarTitle = (TextView) findViewById(R.id.toolbar_title);
-        mToolbarTitle.setText(mTitle.getText());
-        ViewHelper.setAlpha(mToolbarTitle, 0);
-        ViewHelper.setTranslationY(mTitle, (mHeaderBarHeight - mActionBarSize) / 2);
-
-        if (savedInstanceState == null) {
-            mSlidingState = SLIDING_STATE_BOTTOM;
-        }
-
-        ScrollUtils.addOnGlobalLayoutListener(mInterceptionLayout, new Runnable() {
-            @Override
-            public void run() {
-//                if (mFab != null) {
-//                    ViewHelper.setTranslationX(mFab, mTitle.getWidth() - mFabMargin - mFab.getWidth());
-//                    ViewHelper.setTranslationY(mFab, ViewHelper.getY(mTitle) - (mFab.getHeight() / 2));
-//                }
-                changeSlidingState(mSlidingState, false);
-            }
-        });
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        // All the related temporary states can be restored by slidingState
-        mSlidingState = savedInstanceState.getInt(STATE_SLIDING_STATE);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(STATE_SLIDING_STATE, mSlidingState);
-        super.onSaveInstanceState(outState);
-    }
-
-
-
-    protected ObservableScrollView createScrollable() {
-        ObservableScrollView scrollView = (ObservableScrollView) findViewById(R.id.scroll);
-        scrollView.setScrollViewCallbacks(this);
-        return scrollView;
-    }
-
-    @Override
-    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-    }
-
-    @Override
-    public void onDownMotionEvent() {
-    }
-
-    @Override
-    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
-    }
-
     private TouchInterceptionFrameLayout.TouchInterceptionListener mInterceptionListener = new TouchInterceptionFrameLayout.TouchInterceptionListener() {
         @Override
         public boolean shouldInterceptTouchEvent(MotionEvent ev, boolean moving, float diffX, float diffY) {
@@ -245,6 +111,125 @@ public class SlidingUpBaseActivity extends ActionBarActivity implements Observab
             mMoved = false;
         }
     };
+    // These flags are used for changing header colors.
+    private boolean mHeaderColorIsChanging;
+    private boolean mHeaderColorChangedToBottom;
+    private boolean mHeaderIsAtBottom;
+    private boolean mHeaderIsNotAtBottom;
+
+    protected int getScreenHeight() {
+
+        return findViewById(android.R.id.content).getHeight();
+    }
+
+    protected int getActionBarSize() {
+        TypedValue typedValue = new TypedValue();
+        int[] textSizeAttr = new int[]{R.attr.actionBarSize};
+        int indexOfAttrTextSize = 0;
+        TypedArray a = obtainStyledAttributes(typedValue.data, textSizeAttr);
+        int actionBarSize = a.getDimensionPixelSize(indexOfAttrTextSize, -1);
+        a.recycle();
+        return actionBarSize;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.test);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        setSupportActionBar(mToolbar);
+        ViewHelper.setScaleY(mToolbar, 0);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("");
+
+        mToolbarColor = getResources().getColor(R.color.primary);
+        mToolbar.setBackgroundColor(Color.TRANSPARENT);
+        mToolbar.setTitle("");
+
+        mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
+        mIntersectionHeight = getResources().getDimensionPixelSize(R.dimen.intersection_height);
+        mHeaderBarHeight = getResources().getDimensionPixelSize(R.dimen.header_bar_height);
+        mSlidingSlop = getResources().getDimensionPixelSize(R.dimen.sliding_slop);
+        mActionBarSize = getActionBarSize();
+        mColorPrimary = getResources().getColor(R.color.primary);
+        mSlidingHeaderBlueSize = getResources().getDimensionPixelSize(R.dimen.sliding_overlay_blur_size);
+
+        mHeader = findViewById(R.id.header);
+        mHeaderBar = findViewById(R.id.header_bar);
+        mHeaderOverlay = findViewById(R.id.header_overlay);
+        mHeaderFlexibleSpace = findViewById(R.id.header_flexible_space);
+        mImageView = findViewById(R.id.image);
+        mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                slideOnClick();
+            }
+        });
+        mScrollable = createScrollable();
+
+        mFab = findViewById(R.id.fab);
+
+        DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
+        Height = metrics.heightPixels;
+
+        mInterceptionLayout = (TouchInterceptionFrameLayout) findViewById(R.id.scroll_wrapper);
+        mInterceptionLayout.setScrollInterceptionListener(mInterceptionListener);
+        mTitle = (TextView) findViewById(R.id.title);
+        mTitle.setText(getTitle());
+        mToolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        mToolbarTitle.setText(mTitle.getText());
+        ViewHelper.setAlpha(mToolbarTitle, 0);
+        ViewHelper.setTranslationY(mTitle, (mHeaderBarHeight - mActionBarSize) / 2);
+
+        if (savedInstanceState == null) {
+            mSlidingState = SLIDING_STATE_BOTTOM;
+        }
+
+        ScrollUtils.addOnGlobalLayoutListener(mInterceptionLayout, new Runnable() {
+            @Override
+            public void run() {
+//                if (mFab != null) {
+//                    ViewHelper.setTranslationX(mFab, mTitle.getWidth() - mFabMargin - mFab.getWidth());
+//                    ViewHelper.setTranslationY(mFab, ViewHelper.getY(mTitle) - (mFab.getHeight() / 2));
+//                }
+                changeSlidingState(mSlidingState, false);
+            }
+        });
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        // All the related temporary states can be restored by slidingState
+        mSlidingState = savedInstanceState.getInt(STATE_SLIDING_STATE);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(STATE_SLIDING_STATE, mSlidingState);
+        super.onSaveInstanceState(outState);
+    }
+
+    protected ObservableScrollView createScrollable() {
+        ObservableScrollView scrollView = (ObservableScrollView) findViewById(R.id.scroll);
+        scrollView.setScrollViewCallbacks(this);
+        return scrollView;
+    }
+
+    @Override
+    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+    }
+
+    @Override
+    public void onDownMotionEvent() {
+    }
+
+    @Override
+    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+    }
 
     private void changeSlidingState(final int slidingState, boolean animated) {
         mSlidingState = slidingState;
@@ -333,12 +318,12 @@ public class SlidingUpBaseActivity extends ActionBarActivity implements Observab
         float imageTranslationScale = imageAnimatableHeight / (imageAnimatableHeight - mImageView.getHeight());
         float imageTranslationY = Math.max(0, imageAnimatableHeight - (imageAnimatableHeight - translationY) * imageTranslationScale);
 
-        Log.d(MainActivity.LOG_TAG, "getScreenHeight = " + getScreenHeight() + " H = " + Height + " imageAnimatableHeight " +imageAnimatableHeight);
-        Log.d(MainActivity.LOG_TAG, "imageTranslationScale = " + imageTranslationScale+" mHeaderBarHeight = "+mHeaderBarHeight);
-        Log.d(MainActivity.LOG_TAG, "imageTranslationY = " + imageTranslationY+" translationY  "+translationY);
+        Log.d(MainActivity.LOG_TAG, "getScreenHeight = " + getScreenHeight() + " H = " + Height + " imageAnimatableHeight " + imageAnimatableHeight);
+        Log.d(MainActivity.LOG_TAG, "imageTranslationScale = " + imageTranslationScale + " mHeaderBarHeight = " + mHeaderBarHeight);
+        Log.d(MainActivity.LOG_TAG, "imageTranslationY = " + imageTranslationY + " translationY  " + translationY);
 
-        ViewHelper.setTranslationY(mImageView, imageTranslationY );
-       // ViewHelper.setTranslationY(mFab, translationY );
+        ViewHelper.setTranslationY(mImageView, imageTranslationY);
+        // ViewHelper.setTranslationY(mFab, translationY );
 
         // Show/hide FAB
         if (ViewHelper.getTranslationY(mInterceptionLayout) < mFlexibleSpaceImageHeight) {

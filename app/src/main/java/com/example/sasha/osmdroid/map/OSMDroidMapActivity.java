@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
-
 import com.example.sasha.osmdroid.R;
 
 import org.osmdroid.ResourceProxy;
@@ -18,10 +17,11 @@ import org.osmdroid.views.MapView;
 public class OSMDroidMapActivity extends Activity {
     public static final String tag = "OSMSample";
     public static final GeoPoint Odessa = new GeoPoint(46.47404433, 30.74575424);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.fragment_map);
 
         MapView mapView = (MapView) findViewById(R.id.mapview);
         mapView.setClickable(true);
@@ -36,19 +36,17 @@ public class OSMDroidMapActivity extends Activity {
                 "http://otile3.mqcdn.com/tiles/1.0.0/map/",
                 "http://otile4.mqcdn.com/tiles/1.0.0/map/"}));
 
-        // mapView.setTileSource(TileSourceFactory.MAPQUESTOSM);
-
         IMapController mapViewController = mapView.getController();
         mapViewController.setZoom(15);
 
         mapViewController.setCenter(Odessa);
-        Drawable newMarker = this.getResources().getDrawable(R.drawable.marker);
+        Drawable newMarker = this.getResources().getDrawable(R.drawable.ic_location_on_black_24dp);
         Marker startMarker = new Marker(mapView);
         startMarker.setPosition(new GeoPoint(46.47942309, 30.73854446));
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         startMarker.setIcon(newMarker);
         startMarker.setTitle("fgdfgsd");
-        startMarker.setInfoWindow(new CustomInfowindow(R.layout.layout,mapView));
+        startMarker.setInfoWindow(new CustomInfowindow(R.layout.layout, mapView));
         mapView.getOverlays().add(startMarker);
         mapView.invalidate();
 //

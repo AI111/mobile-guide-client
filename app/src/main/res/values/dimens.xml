@@ -17,8 +17,6 @@
     <color name="fab_color_2_muted">#a56ab0</color>
 
 
-
-
     <dimen name="margin_standard">16dp</dimen>
     <dimen name="floating_action_button_size_normal">56dp</dimen>
     <dimen name="floating_action_button_size_mini">40dp</dimen>
@@ -28,8 +26,6 @@
     <dimen name="floating_action_button_margin_normal_minus">-28dp</dimen>
     <dimen name="floating_action_button_margin_mini">26dp</dimen>
     <dimen name="floating_action_button_margin_mini_minus">-26dp</dimen>
-
-
 
 
     <dimen name="margin_short">8dp</dimen>
@@ -45,9 +41,15 @@
     <dimen name="parallax_image_height">180dp</dimen>
     <dimen name="tab_height">48dp</dimen>
 
-    <dimen name="header_bar_height">72dp</dimen>
+    <dimen name="header_bar_height">64dp</dimen>
     <dimen name="intersection_height">16dp</dimen>
 
     <dimen name="sliding_slop">32dp</dimen>
     <dimen name="sliding_overlay_blur_size">4dp</dimen>
+
+
+    <dimen name="button_elevation">2dp</dimen>
+    <dimen name="button_press_elevation">4dp</dimen>
+    <dimen name="drawer_width">260dp</dimen>
+    <dimen name="shape_size">56dp</dimen>
 </resources>

@@ -6,74 +6,35 @@
              android:clipChildren="false"
              android:orientation="vertical">
 
-    <!--
-    Dummy background contents.
-    You can replace this to map or something.
-    -->
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <FrameLayout
+        android:id="@+id/frame_container"
+        android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="#E91E63" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="#3F51B5" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="#2196F3" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="#03A9F4" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="#8BC34A" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="#FFEB3B" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="#FFC107" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="#FF9800" />
-    </LinearLayout>
+        android:layout_marginBottom="@dimen/header_bar_height"
+        android:background="#ffa01925">
+    </FrameLayout>
 
     <FrameLayout
         android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:clipChildren="true"
-        android:layout_height="wrap_content">
+        >
 
         <ImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="@dimen/flexible_space_image_height"
             android:scaleType="centerCrop"
-            android:src="@drawable/odessa" />
+            android:src="@drawable/odessa"/>
     </FrameLayout>
 
     <com.github.ksoichiro.android.observablescrollview.TouchInterceptionFrameLayout
         android:id="@+id/scroll_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipChildren="false">
+        android:clipChildren="false"
+        >
 
         <com.github.ksoichiro.android.observablescrollview.ObservableScrollView
             android:id="@+id/scroll"
@@ -91,7 +52,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
-                android:text="@string/lipsum" />
+                android:text="@string/lipsum"/>
         </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
 
         <FrameLayout
@@ -105,7 +66,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/header_bar_height"
                 android:background="?attr/colorPrimary"
-                android:minHeight="@dimen/header_bar_height" />
+                android:minHeight="@dimen/header_bar_height"/>
+
             <LinearLayout
                 android:id="@+id/header_bar"
                 android:layout_width="match_parent"
@@ -117,14 +79,15 @@
                     android:id="@+id/title"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
+                    android:layout_gravity="center_horizontal"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:maxLines="1"
                     android:paddingLeft="@dimen/margin_standard"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp"
-                    android:layout_gravity="center_horizontal"/>
+                    android:textSize="20sp"/>
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/header_overlay"
                 android:layout_width="match_parent"
@@ -135,29 +98,28 @@
                     android:id="@+id/header_flexible_space"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:background="?attr/colorPrimary" />
+                    android:background="?attr/colorPrimary"/>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/sliding_overlay_blur_size"
                     android:background="@drawable/sliding_header_overlay"
-                    android:minHeight="@dimen/sliding_overlay_blur_size" />
+                    android:minHeight="@dimen/sliding_overlay_blur_size"/>
             </LinearLayout>
 
-                <com.melnykov.fab.FloatingActionButton
-                    android:id="@+id/fab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:scaleType="center"
-                    app:fab_colorNormal="@color/accent_material_light"
-                    app:fab_colorPressed="@color/accent"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginTop="-28dp"
-                    android:layout_gravity="right"
-                    android:layout_alignParentLeft="false"
-                    android:layout_alignParentTop="false"
-                    android:layout_alignParentRight="true"/>
-
+            <com.melnykov.fab.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="false"
+                android:layout_gravity="right"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="-28dp"
+                android:scaleType="center"
+                app:fab_colorNormal="@color/accent_material_light"
+                app:fab_colorPressed="@color/accent"/>
 
 
         </FrameLayout>
@@ -186,4 +148,5 @@
         android:textColor="@android:color/white"
         android:textSize="20sp"
         />
+
 </FrameLayout>
