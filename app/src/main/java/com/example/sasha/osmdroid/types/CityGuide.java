@@ -7,9 +7,7 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -18,44 +16,33 @@ import java.util.Date;
  * Created by sasha on 12/21/14.
  */
 @DatabaseTable(tableName = "cities")
-public class CityGuide implements Serializable{
+public class CityGuide implements Serializable {
     private static final long serialVersionUID = -7060210544600464481L;
     public boolean installed;
-    @DatabaseField(id = true,canBeNull = false)
-    private int Id;
-
-    @DatabaseField()
-    private String  name;
-
-    @DatabaseField()
-    private double latitude;
-
-    @DatabaseField()
-    private  double longitude;
-
-    @DatabaseField()
-    private String description;
-
-    @DatabaseField()
-    private String imgUrl;
-
-    @DatabaseField()
-    private String fullImgUrl;
-
-    @DatabaseField()
-    private float rating;
-
-    @DatabaseField()
-    private String mapCash;
-
-    @DatabaseField()
-    private String dataCash;
-
-    @DatabaseField(dataType = DataType.DATE)
-    private Date changed;
-
     @ForeignCollectionField(eager = true)
     public Collection<CustomGeoPoint> points;// = new ArrayList<CustomGeoPoint>();
+    @DatabaseField(id = true, canBeNull = false)
+    private int Id;
+    @DatabaseField()
+    private String name;
+    @DatabaseField()
+    private double latitude;
+    @DatabaseField()
+    private double longitude;
+    @DatabaseField()
+    private String description;
+    @DatabaseField()
+    private String imgUrl;
+    @DatabaseField()
+    private String fullImgUrl;
+    @DatabaseField()
+    private float rating;
+    @DatabaseField()
+    private String mapCash;
+    @DatabaseField()
+    private String dataCash;
+    @DatabaseField(dataType = DataType.DATE)
+    private Date changed;
 
     public CityGuide(String name, double longitude, double latitude, String description, String imgUrl, String fullImgUrl, float rating, String mapCash, String dataCash, Date changed) {
         this.name = name;
@@ -64,17 +51,19 @@ public class CityGuide implements Serializable{
         this.fullImgUrl = fullImgUrl;
         this.rating = rating;
         this.mapCash = mapCash;
-        this.dataCash=dataCash;
+        this.dataCash = dataCash;
         this.changed = changed;
-        this.latitude=latitude;
-        this.longitude=longitude;
+        this.latitude = latitude;
+        this.longitude = longitude;
 
-        points = new ArrayList<CustomGeoPoint>();
+        //points = new ArrayList<CustomGeoPoint>();
     }
-    public CityGuide(){
+
+    public CityGuide() {
         super();
-        points = new ArrayList<CustomGeoPoint>();
+        // points = new ArrayList<CustomGeoPoint>();
     }
+
     public String getFullImgUrl() {
         return fullImgUrl;
     }
@@ -103,16 +92,16 @@ public class CityGuide implements Serializable{
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getDataCash() {
         return dataCash;
     }
 
     public void setDataCash(String dataCash) {
         this.dataCash = dataCash;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getDescription() {
@@ -125,6 +114,10 @@ public class CityGuide implements Serializable{
 
     public String getImgUrl() {
         return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     public float getRating() {
@@ -149,10 +142,6 @@ public class CityGuide implements Serializable{
 
     public Collection<CustomGeoPoint> getPoints() {
         return points;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
     }
 
     public String getMapCash() {
@@ -182,6 +171,7 @@ public class CityGuide implements Serializable{
         points.remove(value);
         HelperFactory.getHelper().getCustomGeoPointDAO().delete(value);
     }
+
     public void removeAllPoint() throws SQLException {
         HelperFactory.getHelper().getCustomGeoPointDAO().delete(points);
         points.clear();
@@ -190,11 +180,11 @@ public class CityGuide implements Serializable{
     @Override
     public String toString() {
         return "CityGuide{" +
-                "id= "+Id+" "+
+                "id= " + Id + " " +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", imgUrl='" + imgUrl + '\'' +
-                ", ullImgUrl='"+fullImgUrl+'\''+
+                ", ullImgUrl='" + fullImgUrl + '\'' +
                 ", rating=" + rating +
                 ", mapCash='" + mapCash + '\'' +
                 ", changed=" + changed +

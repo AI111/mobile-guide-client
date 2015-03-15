@@ -37,7 +37,7 @@ public class OSMDroidMapActivity extends Activity {
                 "http://otile4.mqcdn.com/tiles/1.0.0/map/"}));
 
         IMapController mapViewController = mapView.getController();
-        mapViewController.setZoom(15);
+        mapViewController.setZoom(14);
 
         mapViewController.setCenter(Odessa);
         Drawable newMarker = this.getResources().getDrawable(R.drawable.ic_location_on_black_24dp);

@@ -110,9 +110,7 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
         switch (item.getItemId()) {
             case R.id.action_request:

@@ -12,7 +12,7 @@
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/header_bar_height"
-        android:background="#ffa01925">
+        >
     </FrameLayout>
 
     <FrameLayout

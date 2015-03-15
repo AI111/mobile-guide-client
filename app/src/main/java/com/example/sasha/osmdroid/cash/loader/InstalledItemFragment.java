@@ -8,7 +8,6 @@ import android.view.View;
 import com.example.sasha.osmdroid.R;
 import com.example.sasha.osmdroid.database.HelperFactory;
 import com.example.sasha.osmdroid.map.MainMapActivity;
-import com.example.sasha.osmdroid.map.SlidingUpBaseActivity;
 import com.example.sasha.osmdroid.types.CityGuide;
 import com.example.sasha.osmdroid.types.CustomGeoPoint;
 import com.j256.ormlite.table.TableUtils;
@@ -92,7 +91,7 @@ public class InstalledItemFragment extends DownloadListFragment {
     @Override
     public void onClickItem(View rootView, View view, final int position) {
         Intent intent = new Intent(getActivity(), MainMapActivity.class);
-        intent.putExtra(SlidingUpBaseActivity.ID_TAG, guides.get(position).getId());
+        intent.putExtra(MainMapActivity.ID_TAG, guides.get(position).getId());
         startActivity(intent);
     }
 }

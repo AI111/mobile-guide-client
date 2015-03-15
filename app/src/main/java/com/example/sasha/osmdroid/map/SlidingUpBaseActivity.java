@@ -31,7 +31,6 @@ import com.nineoldandroids.view.ViewPropertyAnimator;
 
 public class SlidingUpBaseActivity extends ActionBarActivity implements ObservableScrollViewCallbacks {
 
-    public static final String ID_TAG = "CITY_ID";
     private static final String STATE_SLIDING_STATE = "slidingState";
     private static final int SLIDING_STATE_TOP = 0;
     private static final int SLIDING_STATE_MIDDLE = 1;
@@ -132,10 +131,15 @@ public class SlidingUpBaseActivity extends ActionBarActivity implements Observab
         return actionBarSize;
     }
 
+    protected int getLayout() {
+        return R.layout.slide_up_toolbar;
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.test);
+        setContentView(getLayout());
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 

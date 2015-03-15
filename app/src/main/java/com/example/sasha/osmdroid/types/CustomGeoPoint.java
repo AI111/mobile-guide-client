@@ -8,6 +8,8 @@ import java.util.Arrays;
 
 @DatabaseTable(tableName = "points")
 public class CustomGeoPoint {
+    @DatabaseField(generatedId = true)
+    public int Id;
     @DatabaseField()
     public String title;
     @DatabaseField(dataType = DataType.ENUM_INTEGER)

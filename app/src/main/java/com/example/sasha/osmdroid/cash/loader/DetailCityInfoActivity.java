@@ -88,8 +88,8 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
                 imageView.getViewTreeObserver().removeOnPreDrawListener(this);
                 maxDist = imageView.getMeasuredHeight();
                 int finalWidth = imageView.getMeasuredWidth();
-                DX = maxDist / 3 * 2;
-                Log.d(MainActivity.LOG_TAG, "Height: " + maxDist + " Width: " + finalWidth);
+                DX = maxDist / 2;
+//                Log.d(MainActivity.LOG_TAG, "Height: " + maxDist + " Width: " + finalWidth);
                 return true;
             }
         });
@@ -103,7 +103,7 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
             }
 
             private int getAlphaforActionBar(int scrollY) {
-                Log.d(MainActivity.LOG_TAG, "T = " + scrollY + " H = " + maxDist);
+//                Log.d(MainActivity.LOG_TAG, "T = " + scrollY + " H = " + maxDist);
                 if (scrollY > maxDist) {
                     return 255;
                 } else if (scrollY < minDist) {
@@ -145,7 +145,7 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
     @Override
     protected void onStart() {
         super.onStart();
-        //imageView = (ImageView) findViewById(R.id.imageView3);
+
 
     }
 
@@ -370,7 +370,7 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
                 mNotifyManager.notify(id, mBuilder.build());
                 try {
                     Log.d(MainActivity.LOG_TAG, "MEGA LINK " + city.getMapCash());
-                    //     mega.download(city.getCasMaphUri(), getString(R.string.map_cash_path));
+                    // mega.download(city.getCasMaphUri(), getString(R.string.map_cash_path));
                     //download maps cash from MEGA server
                     RestTemplate restTemplate = new RestTemplate();
                     restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
@@ -386,7 +386,7 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
                     //save data structure in database
 
                     //download audio foto and text for use with structure
-
+//
 //                } catch (NoSuchAlgorithmException e) {
 //                    e.printStackTrace();
 //                } catch (NoSuchPaddingException e) {
@@ -455,11 +455,11 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
 
                 try {
 
-                    city.removeAllPoint();
-//                    for(CustomGeoPoint point:guide.points){
-//                        city.removePoint(point);
-//                        HelperFactory.getHelper().getCustomGeoPointDAO().
-//                    }
+                    if (city.points.size() == 0) {
+                        city = HelperFactory.getHelper().getCityGuideDAO().queryForId(city.getId());
+                        //city.points=HelperFactory.getHelper().getCustomGeoPointDAO().queryForEq("cityGuide_id",city.getId());
+                    }
+                    city.points.clear();
                     HelperFactory.getHelper().getCityGuideDAO().delete(city);
                     city.installed = false;
 

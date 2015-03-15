@@ -27,7 +27,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private Context context;
     private OnItemClicklistener onItemClicklistener;
 
-    MyAdapter(Context context, MenuItem[] items, String Name, String Email, String url) { // MyAdapter Constructor with titles and icons parameter
+    public MyAdapter(Context context, MenuItem[] items, String Name, String Email, String url) { // MyAdapter Constructor with titles and icons parameter
         // titles, icons, name, email, profile pic are passed from the main activity as we
         this.items = items;
         name = Name;
