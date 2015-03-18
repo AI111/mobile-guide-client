@@ -15,6 +15,7 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,13 +38,13 @@ public class SlidingUpBaseActivity extends ActionBarActivity implements Observab
     private static final int NUM_OF_ITEMS = 100;
     private static final int NUM_OF_ITEMS_FEW = 3;
     protected TextView mTitle;
-    protected ImageView mImageView;
+    protected ImageView mImageView, smallImg;
+    protected ImageButton mFab;
     private View mHeader;
     private View mHeaderBar;
     private View mHeaderOverlay;
     private View mHeaderFlexibleSpace;
     private TextView mToolbarTitle;
-    private View mFab;
     private Toolbar mToolbar;
     private ObservableScrollView mScrollable;
     private TouchInterceptionFrameLayout mInterceptionLayout;
@@ -165,15 +166,10 @@ public class SlidingUpBaseActivity extends ActionBarActivity implements Observab
         mHeaderOverlay = findViewById(R.id.header_overlay);
         mHeaderFlexibleSpace = findViewById(R.id.header_flexible_space);
         mImageView = (ImageView) findViewById(R.id.image);
-        mImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                slideOnClick();
-            }
-        });
+        smallImg = (ImageView) findViewById(R.id.small_img);
         mScrollable = createScrollable();
 
-        mFab = findViewById(R.id.fab);
+        mFab = (ImageButton) findViewById(R.id.fab);
 
         DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
         Height = metrics.heightPixels;

@@ -21,24 +21,24 @@ import com.example.sasha.osmdroid.types.CustomGeoPoint;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * Created by sasha on 3/6/15.
  */
-public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClicklistener {
+public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClicklistener, MyOnItemGestureListener<OverlayItem, CustomGeoPoint>, View.OnClickListener {
     public static final String ID_TAG = "CITY_ID";
     MyAdapter.MenuItem[] items = new MyAdapter.MenuItem[]{
-            new MyAdapter.MenuItem(R.string.my_cities, R.drawable.ic_play_download_black_24dp),
-            new MyAdapter.MenuItem(R.string.install_cash, R.drawable.ic_shop_black_24dp),
-            new MyAdapter.MenuItem(R.string.action_settings, R.drawable.ic_settings_black_24dp)
+            new MyAdapter.MenuItem(R.string.my_cities, R.drawable.ic_play_download_grey600_24dp),
+            new MyAdapter.MenuItem(R.string.install_cash, R.drawable.ic_shop_grey600_24dp),
+            new MyAdapter.MenuItem(R.string.action_settings, R.drawable.ic_settings_grey600_24dp)
     };
-    RecyclerView mRecyclerView;                           // Declaring RecyclerView
-    MyAdapter mAdapter;                        // Declaring Adapter For Recycler View
-    RecyclerView.LayoutManager mLayoutManager;            // Declaring Layout Manager as a linear layout manager
-    //Similarly we Create a String Resource for the name and email in the header view
-    //And we also create a int resource for profile picture in the header view
-    DrawerLayout Drawer;                                  // Declaring DrawerLayout
-    ActionBarDrawerToggle mDrawerToggle;                  // Declaring Action Bar Drawer Toggle
+    RecyclerView mRecyclerView;
+    MyAdapter mAdapter;
+    RecyclerView.LayoutManager mLayoutManager;
+
+    DrawerLayout Drawer;
+    ActionBarDrawerToggle mDrawerToggle;
     private MapFragment mapFragment;
     private String NAME = "";
     private String EMAIL = "";
@@ -53,73 +53,48 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(MainActivity.LOG_TAG, "onCreate  MainMapActivity");
+        mapFragment = new MapFragment();
+        mFab.setOnClickListener(this);
         if (savedInstanceState == null) {
-            mapFragment = new MapFragment();
+
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.frame_container, mapFragment)
                     .commit();
             Log.d(MainActivity.LOG_TAG, "commit  MainMapActivity");
         }
-        mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView); // Assigning the RecyclerView Object to the xml View
+        mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
+        mRecyclerView.setHasFixedSize(true);
 
-        mRecyclerView.setHasFixedSize(true);                            // Letting the system know that the list objects are of fixed size
+        mAdapter = new MyAdapter(this, items, NAME, EMAIL, null, true);
 
-        mAdapter = new MyAdapter(this, items, NAME, EMAIL, null);       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
-        // And passing the titles,icons,header view name, header view email,
-        // and header view profile picture
+        mRecyclerView.setAdapter(mAdapter);
 
-        mRecyclerView.setAdapter(mAdapter);                              // Setting the adapter to RecyclerView
+        mLayoutManager = new LinearLayoutManager(this);
 
-        mLayoutManager = new LinearLayoutManager(this);                 // Creating a layout Manager
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mRecyclerView.setLayoutManager(mLayoutManager);                 // Setting the layout Manager
-
-        Drawer = (DrawerLayout) findViewById(R.id.DrawerLayout);        // Drawer object Assigned to the view
+        Drawer = (DrawerLayout) findViewById(R.id.DrawerLayout);
         mDrawerToggle = new ActionBarDrawerToggle(this, Drawer, null, R.string.open, R.string.close) {
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                // code here will execute once the drawer is opened( As I dont want anything happened whe drawer is
-                // open I am not going to put anything here)
+
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                // Code here will execute once drawer is closed
+
             }
 
-        }; // Drawer Toggle Object Made
+        };
 
 
         Drawer.setDrawerListener(mDrawerToggle); // Drawer Listener set to the Drawer toggle
         mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
         mAdapter.setOnItemClickListener(this);
-        mapFragment.setOnMarkerClickListener(new MyOnItemGestureListener<OverlayItem, CustomGeoPoint>() {
-            @Override
-            public boolean onItemSingleTapUp(int index, OverlayItem item, CustomGeoPoint point) {
-                Toast.makeText(getApplicationContext(), point.title, Toast.LENGTH_SHORT).show();
-                mTitle.setText(point.title);
-                Log.d(MainActivity.LOG_TAG, dirPath + "/" + point.galery[0]);
-                // Picasso.with(getApplicationContext()).load("file:///"+dirPath+"/"+point.galery[0]).into(mImageView);
-                File imgFile = new File(dirPath + "/" + point.galery[0]);
-
-                if (imgFile.exists()) {
-                    Log.d(MainActivity.LOG_TAG, dirPath + "/" + point.galery[0]);
-                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-
-                    mImageView.setImageBitmap(myBitmap);
-
-                }
-                return false;
-            }
-
-            @Override
-            public boolean onItemLongPress(int index, OverlayItem item, CustomGeoPoint point) {
-                return false;
-            }
-        });
+        mapFragment.setOnMarkerClickListener(this);
 //
         try {
             dirPath = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0).applicationInfo.dataDir + "/" + getString(R.string.data_cash) + "/" + "Odessa";
@@ -132,6 +107,35 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
 
     @Override
     public void onClickItem(View rootView, View view, int position) {
+
+    }
+
+    @Override
+    public boolean onItemSingleTapUp(int index, OverlayItem item, CustomGeoPoint point) {
+        Toast.makeText(getApplicationContext(), point.title, Toast.LENGTH_SHORT).show();
+        mTitle.setText(point.title);
+        Log.d(MainActivity.LOG_TAG, Arrays.toString(CustomGeoPoint.PointType.values()));
+
+        Log.d(MainActivity.LOG_TAG, dirPath + "/" + point.galery[0]);
+        File imgFile = new File(dirPath + "/" + point.galery[0]);
+
+        if (imgFile.exists()) {
+            Log.d(MainActivity.LOG_TAG, dirPath + "/" + point.galery[0]);
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            // smallImg.setImageBitmap(myBitmap);
+            mImageView.setImageBitmap(myBitmap);
+
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onItemLongPress(int index, OverlayItem item, CustomGeoPoint point) {
+        return false;
+    }
+
+    @Override
+    public void onClick(View v) {
 
     }
 }

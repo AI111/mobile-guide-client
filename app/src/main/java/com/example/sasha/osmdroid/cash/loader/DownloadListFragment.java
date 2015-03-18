@@ -43,7 +43,7 @@ import java.util.Arrays;
  */
 
 public class DownloadListFragment extends Fragment implements OnItemClicklistener {
-    public static String url = "http://192.168.0.101:8080";
+    public static String url = "http://192.168.0.104:8080";
     protected RecyclerView mRecyclerView;
     protected MyAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;

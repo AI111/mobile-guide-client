@@ -73,7 +73,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/header_bar_height"
                 android:minHeight="@dimen/header_bar_height"
-                android:orientation="vertical">
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/small_img"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/odessa"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/title"
@@ -94,7 +104,8 @@
                 android:id="@+id/header_overlay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                >
 
                 <View
                     android:id="@+id/header_flexible_space"
@@ -120,8 +131,10 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="-28dp"
                 android:scaleType="center"
-                app:fab_colorNormal="@color/accent_material_light"
-                app:fab_colorPressed="@color/accent"/>
+                android:src="@drawable/ic_play_arrow_black_36dp"
+                app:fab_colorNormal="@color/accent"
+                app:fab_colorPressed="@color/accent_material_dark"
+                />
 
 
         </FrameLayout>

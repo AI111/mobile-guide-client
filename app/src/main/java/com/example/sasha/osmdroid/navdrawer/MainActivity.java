@@ -45,13 +45,12 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private static final int RC_SIGN_IN = 0;
     RegisrtrationFragment regisrtrationFragment;
     MyAdapter.MenuItem[] items = new MyAdapter.MenuItem[]{
-            new MyAdapter.MenuItem(R.string.my_cities, R.drawable.ic_play_download_black_24dp),
-            new MyAdapter.MenuItem(R.string.install_cash, R.drawable.ic_shop_black_24dp),
-            new MyAdapter.MenuItem(R.string.action_settings, R.drawable.ic_settings_black_24dp)
+            new MyAdapter.MenuItem(R.string.my_cities, R.drawable.ic_play_download_grey600_24dp),
+            new MyAdapter.MenuItem(R.string.install_cash, R.drawable.ic_shop_grey600_24dp),
+            new MyAdapter.MenuItem(R.string.action_settings, R.drawable.ic_settings_grey600_24dp)
     };
     String NAME = "Akash Bangad";
     String EMAIL = "akash.bangad@android4devs.com";
-    int PROFILE = R.drawable.odessa;
     RecyclerView mRecyclerView;                           // Declaring RecyclerView
     MyAdapter mAdapter;                        // Declaring Adapter For Recycler View
     RecyclerView.LayoutManager mLayoutManager;            // Declaring Layout Manager as a linear layout manager
@@ -86,7 +85,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         mRecyclerView.setHasFixedSize(true);                            // Letting the system know that the list objects are of fixed size
 
-        mAdapter = new MyAdapter(this, items, NAME, EMAIL, null);       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
+        mAdapter = new MyAdapter(this, items, NAME, EMAIL, null, false);       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
         // And passing the titles,icons,header view name, header view email,
         // and header view profile picture
 

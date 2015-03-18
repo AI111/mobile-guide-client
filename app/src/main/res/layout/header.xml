@@ -16,7 +16,7 @@
         android:layout_marginTop="20dp"
         android:cropToPadding="false"
         android:scaleType="centerCrop"
-        android:src="#ffa0443e"/>
+        android:src="@android:color/transparent"/>
 
     <LinearLayout
         android:layout_width="match_parent"

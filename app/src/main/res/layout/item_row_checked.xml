@@ -4,10 +4,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/common_signin_btn_dark_text_default"
+    android:background="#ffffff"
     android:orientation="horizontal"
-    android:paddingBottom="15dp"
-    android:paddingTop="15dp">
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp">
 
 
     <ImageView
@@ -15,14 +15,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:paddingLeft="16dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="10dp"
         android:src="@drawable/ic_launcher"/>
-
-    <View
-        android:layout_width="1dp"
-        android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        android:background="@android:color/darker_gray"/>
 
     <TextView
         android:id="@+id/rowText"
@@ -32,5 +27,18 @@
         android:text="Medium Textd"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/primary_text"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_weight="1"></View>
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="10dp"
+        android:checked="false"/>
 
 </LinearLayout>
