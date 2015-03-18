@@ -128,10 +128,6 @@ public class CityGuide implements Serializable {
         this.rating = rating;
     }
 
-    public String getCasMaphUri() {
-        return mapCash;
-    }
-
     public Date getChanged() {
         return changed;
     }

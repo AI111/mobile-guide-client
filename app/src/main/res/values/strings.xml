@@ -34,7 +34,7 @@
 
     <!-- PATH FOR SAVED FILES -->
     <string name="map_cash_path">/mnt/sdcard/osmdroid/</string>
-    <string name="data_cash_path">/mnt/sdcard/osmdroid/</string>
+    <string name="data_cash">appCash</string>
 
 
 

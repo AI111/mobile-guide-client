@@ -68,5 +68,5 @@ public class CustomGeoPoint {
                 "\n";
     }
 
-    enum PointType {SHOWPLACE, HOTEL, SHOP, RESTAURAN}
+    enum PointType {SHOWPLACE, HOTEL, SHOP, RESTAURAN, MUSEUM, CAFE}
 }

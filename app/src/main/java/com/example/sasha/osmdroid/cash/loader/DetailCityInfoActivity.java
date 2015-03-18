@@ -3,7 +3,10 @@ package com.example.sasha.osmdroid.cash.loader;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -18,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.sasha.osmdroid.R;
@@ -42,6 +46,27 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
     public final static String SER_KEY = "com.example.sasha.osmdroid.types.ser";
     public static final String VIEW_NAME_HEADER_IMAGE = "detail:header:image";
     public static final String VIEW_NAME_HEADER_TITLE = "detail:header:title";
+    public final static int STATUS_FINISH = 200;
+    public final static String BROADCAST_ACTION = "com.example.sasha.osmdroid";
+    public static final String FINISH = "finish";
+    BroadcastReceiver br = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+
+            int status = intent.getIntExtra(FINISH, 0);
+            Log.d(MainActivity.LOG_TAG, "onReceive " + STATUS_FINISH);
+
+            if (status == STATUS_FINISH) {
+                Log.d(MainActivity.LOG_TAG, "onReceive " + STATUS_FINISH);
+                progressBar.setVisibility(View.GONE);
+                progressBar.setIndeterminate(false);
+                mFab.setImageResource(R.drawable.ic_delete_black_24dp);
+                mFab.setVisibility(View.VISIBLE);
+            }
+        }
+    };
+    ProgressBar progressBar;
     ImageView imageView;
     TextView name;
     TextView descriptiionView;
@@ -58,17 +83,22 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.detail_city_activity);
+        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+
+        registerReceiver(br, intFilt);
         guide = (CityGuide) getIntent().getSerializableExtra(SER_KEY);
         imageView = (ImageView) findViewById(R.id.imageView3);
-        imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
-        mFab.setOnClickListener(this);
-        hideFab(false);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         name = (TextView) findViewById(R.id.textView9);
         descriptiionView = (TextView) findViewById(R.id.textView10);
+        if (guide.installed) mFab.setImageResource(R.drawable.ic_delete_black_24dp);
+
+        mFab.setOnClickListener(this);
+        hideFab(false);
         name.setText(guide.getName());
         descriptiionView.setText(guide.getDescription());
-        if (guide.installed) mFab.setImageResource(R.drawable.ic_delete_black_24dp);
         mActionBar = getSupportActionBar();
         mActionBar.setDisplayHomeAsUpEnabled(true);
         final ColorDrawable cd = new ColorDrawable(getResources().getColor(R.color.primary));
@@ -135,6 +165,7 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
     protected void onDestroy() {
         super.onDestroy();
         Log.d(MainActivity.LOG_TAG, "onDestroy DetailActivityt");
+        unregisterReceiver(br);
 //        Picasso.with(this).cancelRequest(imageView);
 //        ((BitmapDrawable)imageView.getDrawable()).getBitmap().recycle();
 //        imageView.setImageDrawable(null);
@@ -330,10 +361,20 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
         Log.d(MainActivity.LOG_TAG, "FAB OnClick");
         switch (view.getId()) {
             case R.id.fab:
+                String path;
                 if (guide.installed) {
                     new CashRemover().execute(guide);
                 } else {
-                    new CashDownloader().execute(guide);
+
+                    Intent intent = new Intent(getApplicationContext(), DownloadService.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(DetailCityInfoActivity.SER_KEY, guide);
+                    intent.putExtras(bundle);
+                    startService(intent);
+                    progressBar.setVisibility(View.VISIBLE);
+                    progressBar.setIndeterminate(true);
+                    mFab.setVisibility(View.GONE);
+                    //new CashDownloader().execute(guide);
                 }
                 break;
         }

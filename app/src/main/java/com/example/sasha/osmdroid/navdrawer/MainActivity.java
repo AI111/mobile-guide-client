@@ -131,6 +131,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                     .add(R.id.container, regisrtrationFragment)
                     .commit();
         }
+        //Picasso p = new Picasso.Builder(getApplicationContext()).memoryCache(new LruCache(24000)).build();
 
     }
 

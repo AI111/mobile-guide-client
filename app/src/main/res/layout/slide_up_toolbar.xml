@@ -82,7 +82,9 @@
                     android:layout_gravity="center_horizontal"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
+                    android:maxHeight="20dp"
                     android:maxLines="1"
+                    android:minHeight="10dp"
                     android:paddingLeft="@dimen/margin_standard"
                     android:textColor="@android:color/white"
                     android:textSize="20sp"/>

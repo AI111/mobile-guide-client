@@ -11,15 +11,14 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sasha.osmdroid.R;
-import com.example.sasha.osmdroid.cash.loader.MainActivity;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
@@ -37,13 +36,13 @@ public class SlidingUpBaseActivity extends ActionBarActivity implements Observab
     private static final int SLIDING_STATE_BOTTOM = 2;
     private static final int NUM_OF_ITEMS = 100;
     private static final int NUM_OF_ITEMS_FEW = 3;
+    protected TextView mTitle;
+    protected ImageView mImageView;
     private View mHeader;
     private View mHeaderBar;
     private View mHeaderOverlay;
     private View mHeaderFlexibleSpace;
-    private TextView mTitle;
     private TextView mToolbarTitle;
-    private View mImageView;
     private View mFab;
     private Toolbar mToolbar;
     private ObservableScrollView mScrollable;
@@ -165,7 +164,7 @@ public class SlidingUpBaseActivity extends ActionBarActivity implements Observab
         mHeaderBar = findViewById(R.id.header_bar);
         mHeaderOverlay = findViewById(R.id.header_overlay);
         mHeaderFlexibleSpace = findViewById(R.id.header_flexible_space);
-        mImageView = findViewById(R.id.image);
+        mImageView = (ImageView) findViewById(R.id.image);
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -322,15 +321,15 @@ public class SlidingUpBaseActivity extends ActionBarActivity implements Observab
         float imageTranslationScale = imageAnimatableHeight / (imageAnimatableHeight - mImageView.getHeight());
         float imageTranslationY = Math.max(0, imageAnimatableHeight - (imageAnimatableHeight - translationY) * imageTranslationScale);
 
-        Log.d(MainActivity.LOG_TAG, "getScreenHeight = " + getScreenHeight() + " H = " + Height + " imageAnimatableHeight " + imageAnimatableHeight);
-        Log.d(MainActivity.LOG_TAG, "imageTranslationScale = " + imageTranslationScale + " mHeaderBarHeight = " + mHeaderBarHeight);
-        Log.d(MainActivity.LOG_TAG, "imageTranslationY = " + imageTranslationY + " translationY  " + translationY);
+//        Log.d(MainActivity.LOG_TAG, "getScreenHeight = " + getScreenHeight() + " H = " + Height + " imageAnimatableHeight " + imageAnimatableHeight);
+//        Log.d(MainActivity.LOG_TAG, "imageTranslationScale = " + imageTranslationScale + " mHeaderBarHeight = " + mHeaderBarHeight);
+//        Log.d(MainActivity.LOG_TAG, "imageTranslationY = " + imageTranslationY + " translationY  " + translationY);
 
         ViewHelper.setTranslationY(mImageView, imageTranslationY);
         // ViewHelper.setTranslationY(mFab, translationY );
 
         // Show/hide FAB
-        if (ViewHelper.getTranslationY(mInterceptionLayout) < mFlexibleSpaceImageHeight) {
+        if (ViewHelper.getTranslationY(mInterceptionLayout) < mFlexibleSpaceImageHeight || ViewHelper.getTranslationY(mInterceptionLayout) > getScreenHeight() - mHeaderBarHeight - mHeaderBarHeight) {
             hideFab(animated);
         } else {
             if (animated) {

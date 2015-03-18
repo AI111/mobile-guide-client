@@ -78,7 +78,7 @@ public class MapFragment extends Fragment implements MapViewConstants {
 
     }
 
-    public void sitOnMarkerClickListener(MyOnItemGestureListener<OverlayItem, CustomGeoPoint> gestureListener) {
+    public void setOnMarkerClickListener(MyOnItemGestureListener<OverlayItem, CustomGeoPoint> gestureListener) {
         this.gestureListener = gestureListener;
     }
 

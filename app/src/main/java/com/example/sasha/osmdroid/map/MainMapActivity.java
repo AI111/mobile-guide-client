@@ -1,5 +1,8 @@
 package com.example.sasha.osmdroid.map;
 
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,6 +19,8 @@ import com.example.sasha.osmdroid.navdrawer.MyAdapter;
 import com.example.sasha.osmdroid.types.CustomGeoPoint;
 
 import org.osmdroid.views.overlay.OverlayItem;
+
+import java.io.File;
 
 /**
  * Created by sasha on 3/6/15.
@@ -37,6 +42,7 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
     private MapFragment mapFragment;
     private String NAME = "";
     private String EMAIL = "";
+    private String dirPath;
 
     @Override
     protected int getLayout() {
@@ -84,18 +90,28 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
                 // Code here will execute once drawer is closed
             }
 
-
         }; // Drawer Toggle Object Made
 
 
         Drawer.setDrawerListener(mDrawerToggle); // Drawer Listener set to the Drawer toggle
         mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
         mAdapter.setOnItemClickListener(this);
-        mapFragment.sitOnMarkerClickListener(new MyOnItemGestureListener<OverlayItem, CustomGeoPoint>() {
+        mapFragment.setOnMarkerClickListener(new MyOnItemGestureListener<OverlayItem, CustomGeoPoint>() {
             @Override
             public boolean onItemSingleTapUp(int index, OverlayItem item, CustomGeoPoint point) {
                 Toast.makeText(getApplicationContext(), point.title, Toast.LENGTH_SHORT).show();
+                mTitle.setText(point.title);
+                Log.d(MainActivity.LOG_TAG, dirPath + "/" + point.galery[0]);
+                // Picasso.with(getApplicationContext()).load("file:///"+dirPath+"/"+point.galery[0]).into(mImageView);
+                File imgFile = new File(dirPath + "/" + point.galery[0]);
 
+                if (imgFile.exists()) {
+                    Log.d(MainActivity.LOG_TAG, dirPath + "/" + point.galery[0]);
+                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+
+                    mImageView.setImageBitmap(myBitmap);
+
+                }
                 return false;
             }
 
@@ -105,6 +121,11 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
             }
         });
 //
+        try {
+            dirPath = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0).applicationInfo.dataDir + "/" + getString(R.string.data_cash) + "/" + "Odessa";
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
     }
 
