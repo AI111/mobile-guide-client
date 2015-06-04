@@ -1,4 +1,4 @@
-package com.example.sasha.osmdroid.navdrawer;
+package com.example.sasha.osmdroid.views.navdrawer;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;

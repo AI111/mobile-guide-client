@@ -4,8 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.example.sasha.osmdroid.types.CityGuide;
-import com.example.sasha.osmdroid.types.CustomGeoPoint;
+import com.example.sasha.osmdroid.types.GeoPoint;
+import com.example.sasha.osmdroid.types.Guide;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -19,26 +19,22 @@ public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
 
     private static final String TAG = DatabaseHelper.class.getSimpleName();
 
-    //имя файла базы данных который будет храниться в /data/data/APPNAME/DATABASE_NAME.db
     private static final String DATABASE_NAME = "myappname.db";
 
-    //с каждым увеличением версии, при нахождении в устройстве БД с предыдущей версией будет выполнен метод onUpgrade();
     private static final int DATABASE_VERSION = 1;
 
-    //ссылки на DAO соответсвующие сущностям, хранимым в БД
-    private CityGuideDAO cityGuideDAO = null;
-    private CustomGeoPointDAO customGeoPointDAO = null;
+    private GuideDAO cityGuideDAO = null;
+    private GeoPointDAO customGeoPointDAO = null;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    //Выполняется, когда файл с БД не найден на устройстве
     @Override
     public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
         try {
-            TableUtils.createTable(connectionSource, CityGuide.class);
-            TableUtils.createTable(connectionSource, CustomGeoPoint.class);
+            TableUtils.createTable(connectionSource, Guide.class);
+            TableUtils.createTable(connectionSource, GeoPoint.class);
         } catch (SQLException e) {
             Log.e(TAG, "error creating DB " + DATABASE_NAME);
             throw new RuntimeException(e);
@@ -48,9 +44,7 @@ public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVer, int newVer){
 
         try{
-            //Так делают ленивые, гораздо предпочтительнее не удаляя БД аккуратно вносить изменения
-            TableUtils.dropTable(connectionSource, CityGuide.class, true);
-            //TableUtils.dropTable(connectionSource, Role.class, true);
+            TableUtils.dropTable(connectionSource, Guide.class, true);
             onCreate(db, connectionSource);
         }
         catch (SQLException e){
@@ -59,26 +53,22 @@ public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    //синглтон для GoalDAO
-    public CityGuideDAO getCityGuideDAO() throws SQLException{
+    public GuideDAO getGuideDAO() throws SQLException{
         if(cityGuideDAO == null){
-            cityGuideDAO = new CityGuideDAO(getConnectionSource(), CityGuide.class);
+            cityGuideDAO = new GuideDAO(getConnectionSource(), Guide.class);
         }
         return cityGuideDAO;
     }
-   // /синглтон для RoleDAO
-    public CustomGeoPointDAO getCustomGeoPointDAO() throws SQLException{
+    public GeoPointDAO getGeoPointDAO() throws SQLException{
         if(customGeoPointDAO == null){
-            customGeoPointDAO = new CustomGeoPointDAO(getConnectionSource(), CustomGeoPoint.class);
+            customGeoPointDAO = new GeoPointDAO(getConnectionSource(), GeoPoint.class);
         }
         return customGeoPointDAO;
     }
 
-    //выполняется при закрытии приложения
     @Override
     public void close(){
         super.close();
         cityGuideDAO = null;
-        //roleDao = null;
     }
 }

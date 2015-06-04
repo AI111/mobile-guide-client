@@ -5,8 +5,8 @@
     class = "java.util.ArrayList">
     <statePointEntry>
       <state      
-        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "com.example.sasha.osmdroid.cash.loader.MainActivity"/>
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"
+        className="com.example.sasha.osmdroid.views.loader.MainActivity"/>
       <point      
         x = "480"      
         y = "320"/>

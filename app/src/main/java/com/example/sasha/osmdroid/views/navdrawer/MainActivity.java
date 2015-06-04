@@ -1,4 +1,4 @@
-package com.example.sasha.osmdroid.navdrawer;
+package com.example.sasha.osmdroid.views.navdrawer;
 
 /**
  * Created by sasha on 3/3/15.
@@ -22,9 +22,9 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.sasha.osmdroid.R;
-import com.example.sasha.osmdroid.cash.loader.DownloadListFragment;
-import com.example.sasha.osmdroid.cash.loader.InstalledItemFragment;
-import com.example.sasha.osmdroid.cash.loader.OnItemClicklistener;
+import com.example.sasha.osmdroid.views.loader.DownloadListFragment;
+import com.example.sasha.osmdroid.views.loader.InstalledItemFragment;
+import com.example.sasha.osmdroid.views.loader.OnItemClicklistener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
@@ -71,7 +71,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_main);
-        Log.d(com.example.sasha.osmdroid.cash.loader.MainActivity.LOG_TAG, "onCreate");
+        Log.d(com.example.sasha.osmdroid.views.loader.MainActivity.LOG_TAG, "onCreate");
 
     /* Assinging the toolbar object ot the view
     and setting the the Action bar to our toolbar
@@ -170,7 +170,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     @Override
     public void onClickItem(View rootView, View view, int position) {
-        Log.d(com.example.sasha.osmdroid.cash.loader.MainActivity.LOG_TAG, position + "");
+        Log.d(com.example.sasha.osmdroid.views.loader.MainActivity.LOG_TAG, position + "");
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (view.getId() == R.id.menu_item) {
@@ -217,7 +217,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        Log.d(com.example.sasha.osmdroid.cash.loader.MainActivity.LOG_TAG, "onConnectionFailed");
+        Log.d(com.example.sasha.osmdroid.views.loader.MainActivity.LOG_TAG, "onConnectionFailed");
 
         if (!result.hasResolution()) {
             GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), this,
@@ -241,7 +241,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int responseCode,
                                     Intent intent) {
-        Log.d(com.example.sasha.osmdroid.cash.loader.MainActivity.LOG_TAG, "onActivityResult");
+        Log.d(com.example.sasha.osmdroid.views.loader.MainActivity.LOG_TAG, "onActivityResult");
         if (requestCode == RC_SIGN_IN) {
             if (responseCode != RESULT_OK) {
                 mSignInClicked = false;
@@ -257,7 +257,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     @Override
     public void onConnected(Bundle arg0) {
-        Log.d(com.example.sasha.osmdroid.cash.loader.MainActivity.LOG_TAG, "onConnected");
+        Log.d(com.example.sasha.osmdroid.views.loader.MainActivity.LOG_TAG, "onConnected");
         mSignInClicked = false;
         Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
 
@@ -304,7 +304,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                     .setResultCallback(new ResultCallback<Status>() {
                         @Override
                         public void onResult(Status arg0) {
-                            Log.e(com.example.sasha.osmdroid.cash.loader.MainActivity.LOG_TAG, "User access revoked!");
+                            Log.e(com.example.sasha.osmdroid.views.loader.MainActivity.LOG_TAG, "User access revoked!");
                             mGoogleApiClient.connect();
                             updateUI(false);
                         }
@@ -339,11 +339,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 String personPhotoUrl = currentPerson.getImage().getUrl();
                 String personGooglePlusProfile = currentPerson.getUrl();
                 String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
-
-                Log.e(com.example.sasha.osmdroid.cash.loader.MainActivity.LOG_TAG, "Name: " + personName + ", plusProfile: "
-                        + personGooglePlusProfile + ", email: " + email
-                        + ", Image: " + personPhotoUrl);
-
 
                 // by default the profile url gives 50x50 px image only
                 // we can replace the value with whatever dimension we want by

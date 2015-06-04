@@ -5,7 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <com.example.sasha.osmdroid.cash.loader.ScrollViewX
+    <com.example.sasha.osmdroid.views.loader.ScrollViewX
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
 
@@ -86,14 +86,11 @@
                 android:layout_marginBottom="@dimen/floating_action_button_margin_normal_minus"
                 android:layout_marginRight="@dimen/floating_action_button_margin_normal"
                 android:src="@drawable/ic_play_download_black_24dp"
-                app:fab_colorNormal="@color/accent"
-                app:fab_colorPressed="@color/primary_dark"
-                app:fab_colorRipple="@color/accent"
-                />
+                app:fabSize="normal"/>
 
 
         </RelativeLayout>
 
-    </com.example.sasha.osmdroid.cash.loader.ScrollViewX>
+    </com.example.sasha.osmdroid.views.loader.ScrollViewX>
 
 </FrameLayout>

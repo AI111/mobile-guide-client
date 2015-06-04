@@ -16,13 +16,13 @@ import java.util.Date;
  * Created by sasha on 12/21/14.
  */
 @DatabaseTable(tableName = "cities")
-public class CityGuide implements Serializable {
+public class Guide implements Serializable {
     private static final long serialVersionUID = -7060210544600464481L;
     public boolean installed;
     @ForeignCollectionField(eager = true)
-    public Collection<CustomGeoPoint> points;// = new ArrayList<CustomGeoPoint>();
+    public Collection<GeoPoint> points;// = new ArrayList<GeoPoint>();
     @DatabaseField(id = true, canBeNull = false)
-    private int Id;
+    private int id;
     @DatabaseField()
     private String name;
     @DatabaseField()
@@ -44,7 +44,7 @@ public class CityGuide implements Serializable {
     @DatabaseField(dataType = DataType.DATE)
     private Date changed;
 
-    public CityGuide(String name, double longitude, double latitude, String description, String imgUrl, String fullImgUrl, float rating, String mapCash, String dataCash, Date changed) {
+    public Guide(String name, double longitude, double latitude, String description, String imgUrl, String fullImgUrl, float rating, String mapCash, String dataCash, Date changed) {
         this.name = name;
         this.description = description;
         this.imgUrl = imgUrl;
@@ -56,12 +56,12 @@ public class CityGuide implements Serializable {
         this.latitude = latitude;
         this.longitude = longitude;
 
-        //points = new ArrayList<CustomGeoPoint>();
+        //points = new ArrayList<GeoPoint>();
     }
 
-    public CityGuide() {
+    public Guide() {
         super();
-        // points = new ArrayList<CustomGeoPoint>();
+        // points = new ArrayList<GeoPoint>();
     }
 
     public String getFullImgUrl() {
@@ -136,7 +136,7 @@ public class CityGuide implements Serializable {
         this.changed = changed;
     }
 
-    public Collection<CustomGeoPoint> getPoints() {
+    public Collection<GeoPoint> getPoints() {
         return points;
     }
 
@@ -149,34 +149,34 @@ public class CityGuide implements Serializable {
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        id = id;
     }
 
 
-    public void addPoint(CustomGeoPoint value) throws SQLException {
-        value.setCityGuide(this);
-        HelperFactory.getHelper().getCustomGeoPointDAO().create(value);
+    public void addPoint(GeoPoint value) throws SQLException {
+        value.setGuide(this);
+        HelperFactory.getHelper().getGeoPointDAO().create(value);
         points.add(value);
     }
 
-    public void removePoint(CustomGeoPoint value) throws SQLException {
+    public void removePoint(GeoPoint value) throws SQLException {
         points.remove(value);
-        HelperFactory.getHelper().getCustomGeoPointDAO().delete(value);
+        HelperFactory.getHelper().getGeoPointDAO().delete(value);
     }
 
     public void removeAllPoint() throws SQLException {
-        HelperFactory.getHelper().getCustomGeoPointDAO().delete(points);
+        HelperFactory.getHelper().getGeoPointDAO().delete(points);
         points.clear();
     }
 
     @Override
     public String toString() {
-        return "CityGuide{" +
-                "id= " + Id + " " +
+        return "Guide{" +
+                "id= " + id + " " +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", imgUrl='" + imgUrl + '\'' +
@@ -184,7 +184,7 @@ public class CityGuide implements Serializable {
                 ", rating=" + rating +
                 ", mapCash='" + mapCash + '\'' +
                 ", changed=" + changed +
-                ", points=\n" + Arrays.toString(points.toArray()) +
+                ", points=\n" + (points == null ? null : Arrays.toString(points.toArray())) +
                 "}\n";
     }
 }

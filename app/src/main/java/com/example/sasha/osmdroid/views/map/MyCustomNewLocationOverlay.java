@@ -1,4 +1,4 @@
-package com.example.sasha.osmdroid.map;
+package com.example.sasha.osmdroid.views.map;
 
 import android.content.Context;
 

@@ -1,4 +1,4 @@
-package com.example.sasha.osmdroid.cash.loader;
+package com.example.sasha.osmdroid.views.loader;
 
 
 import android.app.AlertDialog;
@@ -26,8 +26,8 @@ import android.widget.TextView;
 
 import com.example.sasha.osmdroid.R;
 import com.example.sasha.osmdroid.database.HelperFactory;
-import com.example.sasha.osmdroid.types.CityGuide;
-import com.example.sasha.osmdroid.types.CustomGeoPoint;
+import com.example.sasha.osmdroid.types.GeoPoint;
+import com.example.sasha.osmdroid.types.Guide;
 import com.j256.ormlite.table.TableUtils;
 import com.squareup.picasso.Picasso;
 
@@ -43,24 +43,24 @@ import java.util.Arrays;
  */
 
 public class DownloadListFragment extends Fragment implements OnItemClicklistener {
-    public static String url = "http://192.168.0.104:8080";
+    public static String url = "http://192.168.0.103:8080";
     protected RecyclerView mRecyclerView;
     protected MyAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
-    protected ArrayList<CityGuide> guides = new ArrayList<>();
+    protected ArrayList<Guide> guides = new ArrayList<>();
     int id = 1;
     private TextView errorMsg;
 
-    //    public static final CityGuide[] cities = new CityGuide[]{
+    //    public static final Guide[] cities = new Guide[]{
 //
-//            new CityGuide("Odessa Ukraine", "The RecyclerView widget is a more advanced and flexible version of ListView. This widget is a container for displaying large data sets that can be scrolled very efficiently by maintaining a limited number of views. Use the RecyclerView widget when you have data collections whose elements change at runtime based on user action or network events."
+//            new Guide("Odessa Ukraine", "The RecyclerView widget is a more advanced and flexible version of ListView. This widget is a container for displaying large data sets that can be scrolled very efficiently by maintaining a limited number of views. Use the RecyclerView widget when you have data collections whose elements change at runtime based on user action or network events."
 //                    , "https://lh5.googleusercontent.com/-_KVTFQacp3M/VM6bDTC5TZI/AAAAAAAAEGQ/eTr1wep-MT8/w280-h210-no/IMG_20130822_221423.JPG", (byte) 5, "urlCash","https://mega.co.nz/#!FEk2TIIb!rhlwEhAj-UC6KIsesfeqzqkyl560SbzSEhlvUu2_bEg",new Date()),
-//            new CityGuide("Odessa", "description", "https://lh3.googleusercontent.com/-7-3FPBNYa1I/VM6bDaMpWSI/AAAAAAAAEGc/Sq6xqZmzyKc/w280-h210-no/IMG_20140128_165152.jpg", (byte) 5, "urlCash","mapCash",new Date()),
-//            new CityGuide("Odessa", "description", "https://lh4.googleusercontent.com/-0KjaKBQABOw/VM6bDFsNdBI/AAAAAAAAEGU/pYdjBOsWHFU/w280-h210-no/IMG_20140712_065329.jpg", (byte) 5, "urlCash","mapCash",new Date()),
-//            new CityGuide("Odessa", "description", "https://lh3.googleusercontent.com/-bP5EKroOzj8/VM6bDjYgEbI/AAAAAAAAEGM/GGnCYfr9R_c/w280-h210-no/IMG_20140712_083445.jpg", (byte) 5, "urlCash","mapCash",new Date()),
-//            new CityGuide("Odessa", "description", "https://lh3.googleusercontent.com/-NhZN8TI1HaQ/VM6bD-EBbEI/AAAAAAAAEGI/A-_a23ClueE/w280-h210-no/IMG_20140715_175055.jpg", (byte) 5, "urlCash","mapCash",new Date()),
-//            new CityGuide("Odessa", "description", "https://lh5.googleusercontent.com/-KR0PhYddFZs/VM6bEBiYLEI/AAAAAAAAEGA/PzyujSmydbs/w280-h210-no/IMG_20140715_181906.jpg", (byte) 5, "urlCash","mapCash",new Date()),
-//            new CityGuide("Odessa", "description", "https://lh4.googleusercontent.com/--0rVSTj2r-0/VM6bER3WzBI/AAAAAAAAEGE/EjyYoJT8G4g/w280-h210-no/IMG_20140727_175532.jpg" , (byte) 5, "urlCash","mapCash",new Date())
+//            new Guide("Odessa", "description", "https://lh3.googleusercontent.com/-7-3FPBNYa1I/VM6bDaMpWSI/AAAAAAAAEGc/Sq6xqZmzyKc/w280-h210-no/IMG_20140128_165152.jpg", (byte) 5, "urlCash","mapCash",new Date()),
+//            new Guide("Odessa", "description", "https://lh4.googleusercontent.com/-0KjaKBQABOw/VM6bDFsNdBI/AAAAAAAAEGU/pYdjBOsWHFU/w280-h210-no/IMG_20140712_065329.jpg", (byte) 5, "urlCash","mapCash",new Date()),
+//            new Guide("Odessa", "description", "https://lh3.googleusercontent.com/-bP5EKroOzj8/VM6bDjYgEbI/AAAAAAAAEGM/GGnCYfr9R_c/w280-h210-no/IMG_20140712_083445.jpg", (byte) 5, "urlCash","mapCash",new Date()),
+//            new Guide("Odessa", "description", "https://lh3.googleusercontent.com/-NhZN8TI1HaQ/VM6bD-EBbEI/AAAAAAAAEGI/A-_a23ClueE/w280-h210-no/IMG_20140715_175055.jpg", (byte) 5, "urlCash","mapCash",new Date()),
+//            new Guide("Odessa", "description", "https://lh5.googleusercontent.com/-KR0PhYddFZs/VM6bEBiYLEI/AAAAAAAAEGA/PzyujSmydbs/w280-h210-no/IMG_20140715_181906.jpg", (byte) 5, "urlCash","mapCash",new Date()),
+//            new Guide("Odessa", "description", "https://lh4.googleusercontent.com/--0rVSTj2r-0/VM6bER3WzBI/AAAAAAAAEGE/EjyYoJT8G4g/w280-h210-no/IMG_20140727_175532.jpg" , (byte) 5, "urlCash","mapCash",new Date())
 //    };
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -138,30 +138,30 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
                 break;
             case R.id.clear_db:
                 try {
-                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), CityGuide.class);
-                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), CustomGeoPoint.class);
+                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), Guide.class);
+                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), GeoPoint.class);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
                 break;
             case R.id.show_db:
                 try {
-                    Log.d(MainActivity.LOG_TAG, "\n DB = " + HelperFactory.getHelper().getCityGuideDAO().getAllCities() + "\n----------\n" + HelperFactory.getHelper().getCustomGeoPointDAO().getAllPoints());
+                    Log.d(MainActivity.LOG_TAG, "\n DB = " + HelperFactory.getHelper().getGuideDAO().getAllCities() + "\n----------\n" + HelperFactory.getHelper().getGeoPointDAO().getAllPoints());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
                 break;
             case R.id.clear_all:
                 try {
-                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), CityGuide.class);
-                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), CustomGeoPoint.class);
+                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), Guide.class);
+                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), GeoPoint.class);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
 
                 try {
-                    TableUtils.createTable(HelperFactory.getHelper().getConnectionSource(), CityGuide.class);
-                    TableUtils.createTable(HelperFactory.getHelper().getConnectionSource(), CustomGeoPoint.class);
+                    TableUtils.createTable(HelperFactory.getHelper().getConnectionSource(), Guide.class);
+                    TableUtils.createTable(HelperFactory.getHelper().getConnectionSource(), GeoPoint.class);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -202,7 +202,7 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
     @Override
     public void onClickItem(View rootView, View view, final int position) {
         if (view.getId() == R.id.imageView2) {
-            Intent intent = new Intent(getActivity(), DetailCityInfoActivity.class);
+            Intent intent = new Intent(getActivity(), DetailCityInfoActivity2.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable(DetailCityInfoActivity.SER_KEY, guides.get(position));
             intent.putExtras(bundle);
@@ -210,9 +210,9 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
                     ActivityOptionsCompat.makeSceneTransitionAnimation(
                             getActivity()
                             , new Pair<View, String>(rootView.findViewById(R.id.imageView2),
-                                    DetailCityInfoActivity.VIEW_NAME_HEADER_IMAGE),
-                            new Pair<View, String>(rootView.findViewById(R.id.textView2),
-                                    DetailCityInfoActivity.VIEW_NAME_HEADER_TITLE)
+                                    DetailCityInfoActivity.VIEW_NAME_HEADER_IMAGE)
+//                            , new Pair<View, String>(rootView.findViewById(R.id.textView2),
+//                                    DetailCityInfoActivity.VIEW_NAME_HEADER_TITLE)
                     );
             ActivityCompat.startActivity(getActivity(), intent, activityOptions.toBundle());
         }
@@ -220,10 +220,10 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
 
 
     protected class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
-        ArrayList<CityGuide> citys;
+        ArrayList<Guide> citys;
         OnItemClicklistener onItemClicklistener;
 
-        MyAdapter(ArrayList<CityGuide> citys) {
+        MyAdapter(ArrayList<Guide> citys) {
             this.citys = citys;
         }
 
@@ -320,7 +320,7 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
         }
     }
 
-    private class HttpRequestCytiesList extends AsyncTask<Void, Void, ArrayList<CityGuide>> {
+    private class HttpRequestCytiesList extends AsyncTask<Void, Void, ArrayList<Guide>> {
 
         @Override
         protected void onPreExecute() {
@@ -330,21 +330,22 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
         }
 
         @Override
-        protected ArrayList<CityGuide> doInBackground(Void... params) {
+        protected ArrayList<Guide> doInBackground(Void... params) {
             Log.v(MainActivity.LOG_TAG, "doInBackground");
-            ArrayList<CityGuide> cityGuides = null;
+            ArrayList<Guide> cityGuides = null;
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
             try {
-                cityGuides = new ArrayList<CityGuide>(Arrays.asList(restTemplate.getForObject(url + "/getCities", CityGuide[].class)));
+                cityGuides = new ArrayList<Guide>(Arrays.asList(restTemplate.getForObject(url + "/guides", Guide[].class)));
+                Log.d(MainActivity.LOG_TAG, cityGuides.toString());
             } catch (Exception e) {
                 //Toast.makeText(getActivity(),"Connection errror",Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
                 return null;
             }
-            for (CityGuide c : cityGuides) {
+            for (Guide c : cityGuides) {
                 try {
-                    c.installed = HelperFactory.getHelper().getCityGuideDAO().idExists(c.getId());
+                    c.installed = HelperFactory.getHelper().getGuideDAO().idExists(c.getId());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -353,7 +354,7 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
         }
 
         @Override
-        protected void onPostExecute(ArrayList<CityGuide> cityGuides) {
+        protected void onPostExecute(ArrayList<Guide> cityGuides) {
 
             if (cityGuides != null) {
                 guides.clear();

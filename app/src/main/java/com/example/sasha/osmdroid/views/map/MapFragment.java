@@ -1,4 +1,4 @@
-package com.example.sasha.osmdroid.map;
+package com.example.sasha.osmdroid.views.map;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -10,16 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.sasha.osmdroid.R;
-import com.example.sasha.osmdroid.cash.loader.MainActivity;
 import com.example.sasha.osmdroid.database.HelperFactory;
-import com.example.sasha.osmdroid.types.CityGuide;
-import com.example.sasha.osmdroid.types.CustomGeoPoint;
+import com.example.sasha.osmdroid.types.GeoPoint;
+import com.example.sasha.osmdroid.types.Guide;
+import com.example.sasha.osmdroid.views.loader.MainActivity;
 
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
-import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.ResourceProxyImpl;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
@@ -41,18 +40,18 @@ public class MapFragment extends Fragment implements MapViewConstants {
     private ResourceProxyImpl mResourceProxy;
     private IMapController mapController;
     private MyLocationNewOverlay myLocationOverlay;
-    private CityGuide guide;
+    private Guide guide;
     private CompassOverlay compassOverlay;
     private ArrayList<OverlayItem> items;
     private ItemizedIconOverlay.OnItemGestureListener<OverlayItem> listener;
-    private MyOnItemGestureListener<OverlayItem, CustomGeoPoint> gestureListener;
-    private CustomGeoPoint[] geoPoints;
+    private MyOnItemGestureListener<OverlayItem, GeoPoint> gestureListener;
+    private GeoPoint[] geoPoints;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            guide = HelperFactory.getHelper().getCityGuideDAO().queryForId(getActivity().getIntent().getIntExtra(MainMapActivity.ID_TAG, -1));
+            guide = HelperFactory.getHelper().getGuideDAO().queryForId(getActivity().getIntent().getIntExtra(MainMapActivity.ID_TAG, -1));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -78,7 +77,7 @@ public class MapFragment extends Fragment implements MapViewConstants {
 
     }
 
-    public void setOnMarkerClickListener(MyOnItemGestureListener<OverlayItem, CustomGeoPoint> gestureListener) {
+    public void setOnMarkerClickListener(MyOnItemGestureListener<OverlayItem, GeoPoint> gestureListener) {
         this.gestureListener = gestureListener;
     }
 
@@ -87,7 +86,7 @@ public class MapFragment extends Fragment implements MapViewConstants {
         super.onActivityCreated(savedInstanceState);
         Log.d(MainActivity.LOG_TAG, "onActivityCreated  MapFragment");
         mapController = mapView.getController();
-        GeoPoint center = new GeoPoint(guide.getLatitude(), guide.getLongitude());
+        org.osmdroid.util.GeoPoint center = new org.osmdroid.util.GeoPoint(guide.getLatitude(), guide.getLongitude());
         mapController.setZoom(14);
         mapController.setCenter(center);
         mapController.animateTo(center);
@@ -102,7 +101,7 @@ public class MapFragment extends Fragment implements MapViewConstants {
 
         Drawable newMarker = this.getResources().getDrawable(R.drawable.ic_location_on_black_36dp);
 
-//        for(CustomGeoPoint point:guide.points){
+//        for(GeoPoint point:guide.points){
 //            Marker startMarker = new Marker(mapView);
 //            startMarker.setPosition(new GeoPoint(point.latitude, point.longitude));
 //            startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
@@ -113,9 +112,9 @@ public class MapFragment extends Fragment implements MapViewConstants {
 
 
         items = new ArrayList<>();
-        geoPoints = guide.points.toArray(new CustomGeoPoint[guide.points.size()]);
-        for (CustomGeoPoint point : geoPoints) {
-            OverlayItem item = new OverlayItem(point.title, point.description, new GeoPoint(point.latitude, point.longitude));
+        geoPoints = guide.points.toArray(new GeoPoint[guide.points.size()]);
+        for (GeoPoint point : geoPoints) {
+            OverlayItem item = new OverlayItem(point.title, point.description, new org.osmdroid.util.GeoPoint(point.latitude, point.longitude));
             item.setMarker(newMarker);
             items.add(item);
         }

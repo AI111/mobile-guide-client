@@ -1,4 +1,4 @@
-package com.example.sasha.osmdroid.map;
+package com.example.sasha.osmdroid.views.map;
 
 /**
  * Created by sasha on 3/12/15.

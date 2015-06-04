@@ -1,4 +1,4 @@
-package com.example.sasha.osmdroid.map;
+package com.example.sasha.osmdroid.views.map;
 
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,10 +13,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.sasha.osmdroid.R;
-import com.example.sasha.osmdroid.cash.loader.MainActivity;
-import com.example.sasha.osmdroid.cash.loader.OnItemClicklistener;
-import com.example.sasha.osmdroid.navdrawer.MyAdapter;
-import com.example.sasha.osmdroid.types.CustomGeoPoint;
+import com.example.sasha.osmdroid.types.GeoPoint;
+import com.example.sasha.osmdroid.views.loader.MainActivity;
+import com.example.sasha.osmdroid.views.loader.OnItemClicklistener;
+import com.example.sasha.osmdroid.views.navdrawer.MyAdapter;
 
 import org.osmdroid.views.overlay.OverlayItem;
 
@@ -26,7 +26,7 @@ import java.util.Arrays;
 /**
  * Created by sasha on 3/6/15.
  */
-public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClicklistener, MyOnItemGestureListener<OverlayItem, CustomGeoPoint>, View.OnClickListener {
+public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClicklistener, MyOnItemGestureListener<OverlayItem, GeoPoint>, View.OnClickListener {
     public static final String ID_TAG = "CITY_ID";
     MyAdapter.MenuItem[] items = new MyAdapter.MenuItem[]{
             new MyAdapter.MenuItem(R.string.my_cities, R.drawable.ic_play_download_grey600_24dp),
@@ -111,10 +111,10 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
     }
 
     @Override
-    public boolean onItemSingleTapUp(int index, OverlayItem item, CustomGeoPoint point) {
+    public boolean onItemSingleTapUp(int index, OverlayItem item, GeoPoint point) {
         Toast.makeText(getApplicationContext(), point.title, Toast.LENGTH_SHORT).show();
         mTitle.setText(point.title);
-        Log.d(MainActivity.LOG_TAG, Arrays.toString(CustomGeoPoint.PointType.values()));
+        Log.d(MainActivity.LOG_TAG, Arrays.toString(GeoPoint.PointType.values()));
 
         Log.d(MainActivity.LOG_TAG, dirPath + "/" + point.galery[0]);
         File imgFile = new File(dirPath + "/" + point.galery[0]);
@@ -130,7 +130,7 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
     }
 
     @Override
-    public boolean onItemLongPress(int index, OverlayItem item, CustomGeoPoint point) {
+    public boolean onItemLongPress(int index, OverlayItem item, GeoPoint point) {
         return false;
     }
 

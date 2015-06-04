@@ -1,6 +1,6 @@
 package com.example.sasha.osmdroid.database;
 
-import com.example.sasha.osmdroid.types.CityGuide;
+import com.example.sasha.osmdroid.types.Guide;
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
 
@@ -10,14 +10,14 @@ import java.util.List;
 /**
  * Created by sasha on 1/26/15.
  */
-public class CityGuideDAO extends BaseDaoImpl<CityGuide, Integer> {
+public class GuideDAO extends BaseDaoImpl<Guide, Integer> {
 
-    protected CityGuideDAO(ConnectionSource connectionSource,
-                           Class<CityGuide> dataClass) throws SQLException {
+    protected GuideDAO(ConnectionSource connectionSource,
+                       Class<Guide> dataClass) throws SQLException {
         super(connectionSource, dataClass);
     }
 
-    public List<CityGuide> getAllCities() throws SQLException {
+    public List<Guide> getAllCities() throws SQLException {
         return this.queryForAll();
     }
 }

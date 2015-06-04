@@ -1,4 +1,4 @@
-package com.example.sasha.osmdroid.map;
+package com.example.sasha.osmdroid.views.map;
 
 /**
  * Created by sasha on 3/2/15.
@@ -66,6 +66,11 @@ public class SlidingUpBaseActivity extends ActionBarActivity implements Observab
     private float mInitialY;
     private float mMovedDistanceY;
     private float mScrollYOnDownMotion;
+    // These flags are used for changing header colors.
+    private boolean mHeaderColorIsChanging;
+    private boolean mHeaderColorChangedToBottom;
+    private boolean mHeaderIsAtBottom;
+    private boolean mHeaderIsNotAtBottom;
     private TouchInterceptionFrameLayout.TouchInterceptionListener mInterceptionListener = new TouchInterceptionFrameLayout.TouchInterceptionListener() {
         @Override
         public boolean shouldInterceptTouchEvent(MotionEvent ev, boolean moving, float diffX, float diffY) {
@@ -110,11 +115,6 @@ public class SlidingUpBaseActivity extends ActionBarActivity implements Observab
             mMoved = false;
         }
     };
-    // These flags are used for changing header colors.
-    private boolean mHeaderColorIsChanging;
-    private boolean mHeaderColorChangedToBottom;
-    private boolean mHeaderIsAtBottom;
-    private boolean mHeaderIsNotAtBottom;
 
     protected int getScreenHeight() {
 

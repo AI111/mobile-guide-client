@@ -1,4 +1,4 @@
-package com.example.sasha.osmdroid.navdrawer;
+package com.example.sasha.osmdroid.views.navdrawer;
 
 
 import android.content.Context;
@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.sasha.osmdroid.R;
-import com.example.sasha.osmdroid.cash.loader.OnItemClicklistener;
+import com.example.sasha.osmdroid.views.loader.OnItemClicklistener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

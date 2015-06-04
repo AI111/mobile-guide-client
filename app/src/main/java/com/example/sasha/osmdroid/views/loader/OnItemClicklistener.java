@@ -1,4 +1,4 @@
-package com.example.sasha.osmdroid.cash.loader;
+package com.example.sasha.osmdroid.views.loader;
 
 import android.view.View;
 

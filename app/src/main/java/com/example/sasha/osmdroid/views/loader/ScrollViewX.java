@@ -1,4 +1,4 @@
-package com.example.sasha.osmdroid.cash.loader;
+package com.example.sasha.osmdroid.views.loader;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -20,10 +20,6 @@ public class ScrollViewX extends ScrollView {
         super(context, attrs, defStyle);
     }
 
-    public interface OnScrollViewListener {
-        void onScrollChanged( ScrollViewX v, int l, int t, int oldl, int oldt );
-    }
-
     public void setOnScrollViewListener(OnScrollViewListener l) {
         this.mOnScrollViewListener = l;
     }
@@ -31,5 +27,9 @@ public class ScrollViewX extends ScrollView {
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         mOnScrollViewListener.onScrollChanged( this, l, t, oldl, oldt );
         super.onScrollChanged( l, t, oldl, oldt );
+    }
+
+    public interface OnScrollViewListener {
+        void onScrollChanged(ScrollViewX v, int l, int t, int oldl, int oldt);
     }
 }

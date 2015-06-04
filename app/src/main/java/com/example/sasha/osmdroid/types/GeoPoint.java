@@ -7,9 +7,9 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.util.Arrays;
 
 @DatabaseTable(tableName = "points")
-public class CustomGeoPoint {
+public class GeoPoint {
     @DatabaseField(generatedId = true)
-    public int Id;
+    public int id;
     @DatabaseField()
     public String title;
     @DatabaseField(dataType = DataType.ENUM_INTEGER)
@@ -28,9 +28,9 @@ public class CustomGeoPoint {
     @DatabaseField()
     public double longitude;
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
-    private CityGuide cityGuide;
+    private Guide cityGuide;
 
-    public CustomGeoPoint(String title, PointType type, String description, String text, String[] galery, String audio, double latitude, double longitude, CityGuide cityGuide) {
+    public GeoPoint(String title, PointType type, String description, String text, String[] galery, String audio, double latitude, double longitude, Guide cityGuide) {
         this.title = title;
         this.type = type;
         this.description = description;
@@ -42,21 +42,21 @@ public class CustomGeoPoint {
         this.cityGuide = cityGuide;
     }
 
-    public CustomGeoPoint() {
+    public GeoPoint() {
         super();
     }
 
-    public CityGuide getCityGuide() {
+    public Guide getGuide() {
         return cityGuide;
     }
 
-    public void setCityGuide(CityGuide cityGuide) {
+    public void setGuide(Guide cityGuide) {
         this.cityGuide = cityGuide;
     }
 
     @Override
     public String toString() {
-        return "CustomGeoPoint{" +
+        return "GeoPoint{" +
                 "title='" + title + '\'' +
                 ", type=" + type +
                 ", description='" + description + '\'' +

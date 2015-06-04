@@ -1,4 +1,4 @@
-package com.example.sasha.osmdroid.cash.loader;
+package com.example.sasha.osmdroid.views.loader;
 
 /**
  * Created by sasha on 12/20/14.
@@ -18,8 +18,8 @@ import android.widget.TextView;
 
 import com.example.sasha.osmdroid.R;
 import com.example.sasha.osmdroid.database.HelperFactory;
-import com.example.sasha.osmdroid.types.CityGuide;
-import com.example.sasha.osmdroid.types.CustomGeoPoint;
+import com.example.sasha.osmdroid.types.GeoPoint;
+import com.example.sasha.osmdroid.types.Guide;
 import com.j256.ormlite.table.TableUtils;
 
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -64,9 +64,9 @@ public class TestFragment extends Fragment {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (CityGuide a : MainActivity.guides) {
+                for (Guide a : MainActivity.guides) {
                     try {
-                        HelperFactory.getHelper().getCityGuideDAO().create(a);
+                        HelperFactory.getHelper().getGuideDAO().create(a);
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
@@ -77,7 +77,7 @@ public class TestFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 try {
-                    text.setText("DB = " + HelperFactory.getHelper().getCityGuideDAO().getAllCities());
+                    text.setText("DB = " + HelperFactory.getHelper().getGuideDAO().getAllCities());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -87,11 +87,11 @@ public class TestFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 try {
-                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), CityGuide.class);
+                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), Guide.class);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                //HelperFactory.getHelper().getCityGuideDAO().
+                //HelperFactory.getHelper().getGuideDAO().
             }
         });
         return rootView;
@@ -135,38 +135,38 @@ public class TestFragment extends Fragment {
                 break;
             case R.id.clear_db:
                 try {
-                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), CityGuide.class);
-                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), CustomGeoPoint.class);
+                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), Guide.class);
+                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), GeoPoint.class);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
                 break;
             case R.id.show_db:
                 try {
-                    text.setText("DB = " + HelperFactory.getHelper().getCityGuideDAO().getAllCities() + "\n----------\n" + HelperFactory.getHelper().getCustomGeoPointDAO().getAllPoints());
+                    text.setText("DB = " + HelperFactory.getHelper().getGuideDAO().getAllCities() + "\n----------\n" + HelperFactory.getHelper().getGeoPointDAO().getAllPoints());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
                 break;
             case R.id.clear_all:
                 try {
-                    TableUtils.dropTable(HelperFactory.getHelper().getConnectionSource(), CityGuide.class, true);
-                    TableUtils.dropTable(HelperFactory.getHelper().getConnectionSource(), CustomGeoPoint.class, true);
+                    TableUtils.dropTable(HelperFactory.getHelper().getConnectionSource(), Guide.class, true);
+                    TableUtils.dropTable(HelperFactory.getHelper().getConnectionSource(), GeoPoint.class, true);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
 
                 try {
-                    TableUtils.createTable(HelperFactory.getHelper().getConnectionSource(), CityGuide.class);
-                    TableUtils.createTable(HelperFactory.getHelper().getConnectionSource(), CustomGeoPoint.class);
+                    TableUtils.createTable(HelperFactory.getHelper().getConnectionSource(), Guide.class);
+                    TableUtils.createTable(HelperFactory.getHelper().getConnectionSource(), GeoPoint.class);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
                 break;
             case R.id.list_save:
-                for (CityGuide a : MainActivity.guides) {
+                for (Guide a : MainActivity.guides) {
                     try {
-                        HelperFactory.getHelper().getCityGuideDAO().create(a);
+                        HelperFactory.getHelper().getGuideDAO().create(a);
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
@@ -187,7 +187,7 @@ public class TestFragment extends Fragment {
      */
 
 
-    private class HttpRequestCytiesList extends AsyncTask<Void, Void, CityGuide[]> {
+    private class HttpRequestCytiesList extends AsyncTask<Void, Void, Guide[]> {
         String url;
 
         @Override
@@ -198,13 +198,13 @@ public class TestFragment extends Fragment {
         }
 
         @Override
-        protected CityGuide[] doInBackground(Void... params) {
+        protected Guide[] doInBackground(Void... params) {
             try {
                 //final String url = "http://"+ip+":8080/getCities";
                 RestTemplate restTemplate = new RestTemplate();
 
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                CityGuide[] greeting = restTemplate.getForObject(url, CityGuide[].class);
+                Guide[] greeting = restTemplate.getForObject(url, Guide[].class);
                 Log.v("MainActivity", url);
                 return greeting;
             } catch (Exception e) {
@@ -216,14 +216,14 @@ public class TestFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(CityGuide[] greeting) {
+        protected void onPostExecute(Guide[] greeting) {
             text.setText(Arrays.toString(greeting));
             MainActivity.guides = new ArrayList<>(Arrays.asList(greeting));
         }
 
     }
 
-    private class HttpRequestPoints extends AsyncTask<Void, Void, CustomGeoPoint[]> {
+    private class HttpRequestPoints extends AsyncTask<Void, Void, GeoPoint[]> {
         String url;
 
         @Override
@@ -234,13 +234,13 @@ public class TestFragment extends Fragment {
         }
 
         @Override
-        protected CustomGeoPoint[] doInBackground(Void... params) {
+        protected GeoPoint[] doInBackground(Void... params) {
             try {
                 //final String url = "http://"+ip+":8080/getCities";
                 RestTemplate restTemplate = new RestTemplate();
 
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                CustomGeoPoint[] geoPoints = restTemplate.getForObject(url, CustomGeoPoint[].class);
+                GeoPoint[] geoPoints = restTemplate.getForObject(url, GeoPoint[].class);
                 Log.v("MainActivity", url);
                 return geoPoints;
             } catch (Exception e) {
@@ -252,10 +252,10 @@ public class TestFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(CustomGeoPoint[] geoPoints) {
+        protected void onPostExecute(GeoPoint[] geoPoints) {
             //text.setText(Arrays.toString(geoPoints));
-            CityGuide cityGuide = MainActivity.guides.get(0);
-            for (CustomGeoPoint point : geoPoints) {
+            Guide cityGuide = MainActivity.guides.get(0);
+            for (GeoPoint point : geoPoints) {
                 try {
                     cityGuide.addPoint(point);
                 } catch (SQLException e) {
@@ -264,7 +264,7 @@ public class TestFragment extends Fragment {
             }
             text.setText(cityGuide.toString());
             try {
-                HelperFactory.getHelper().getCityGuideDAO().create(cityGuide);
+                HelperFactory.getHelper().getGuideDAO().create(cityGuide);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

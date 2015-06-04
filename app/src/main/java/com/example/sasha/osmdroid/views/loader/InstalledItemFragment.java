@@ -1,11 +1,11 @@
-package com.example.sasha.osmdroid.cash.loader;
+package com.example.sasha.osmdroid.views.loader;
 
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 
 import com.example.sasha.osmdroid.database.HelperFactory;
-import com.example.sasha.osmdroid.map.MainMapActivity;
+import com.example.sasha.osmdroid.views.map.MainMapActivity;
 
 import java.sql.SQLException;
 
@@ -18,7 +18,7 @@ public class InstalledItemFragment extends DownloadListFragment {
         try {
 
             guides.clear();
-            guides.addAll(HelperFactory.getHelper().getCityGuideDAO().getAllCities());
+            guides.addAll(HelperFactory.getHelper().getGuideDAO().getAllCities());
             mAdapter.notifyDataSetChanged();
 
         } catch (SQLException e) {

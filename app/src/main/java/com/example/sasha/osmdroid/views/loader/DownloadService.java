@@ -1,4 +1,4 @@
-package com.example.sasha.osmdroid.cash.loader;
+package com.example.sasha.osmdroid.views.loader;
 
 import android.app.IntentService;
 import android.app.Notification;
@@ -10,8 +10,8 @@ import android.util.Log;
 import com.example.sasha.osmdroid.R;
 import com.example.sasha.osmdroid.database.HelperFactory;
 import com.example.sasha.osmdroid.mega.Mega;
-import com.example.sasha.osmdroid.types.CityGuide;
-import com.example.sasha.osmdroid.types.CustomGeoPoint;
+import com.example.sasha.osmdroid.types.GeoPoint;
+import com.example.sasha.osmdroid.types.Guide;
 
 import org.json.JSONException;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -64,7 +64,7 @@ public class DownloadService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        CityGuide city = (CityGuide) intent.getSerializableExtra(DetailCityInfoActivity.SER_KEY);
+        Guide city = (Guide) intent.getSerializableExtra(DetailCityInfoActivity.SER_KEY);
         Notification.Builder mBuilder = new Notification.Builder(getApplicationContext());
         mBuilder.setContentTitle("Picture Download")
                 .setContentText("Download in progress")
@@ -102,12 +102,12 @@ public class DownloadService extends IntentService {
 
         try {
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-            CustomGeoPoint[] geoPoints = restTemplate.getForObject(DownloadListFragment.url + "getPoints?id=2" + city.getId(), CustomGeoPoint[].class);
+            GeoPoint[] geoPoints = restTemplate.getForObject(DownloadListFragment.url + "getPoints?id=2" + city.getId(), GeoPoint[].class);
             //download data structure
-            for (CustomGeoPoint point : geoPoints) {
+            for (GeoPoint point : geoPoints) {
                 city.addPoint(point);
             }
-            HelperFactory.getHelper().getCityGuideDAO().create(city);
+            HelperFactory.getHelper().getGuideDAO().create(city);
             city.installed = true;
 
             //save data structure in database
@@ -129,7 +129,7 @@ public class DownloadService extends IntentService {
 
     }
 
-    private void downloadMegaFiles(CityGuide city) throws NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IOException, JSONException, BadPaddingException, IllegalBlockSizeException, InvalidKeyException, PackageManager.NameNotFoundException {
+    private void downloadMegaFiles(Guide city) throws NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IOException, JSONException, BadPaddingException, IllegalBlockSizeException, InvalidKeyException, PackageManager.NameNotFoundException {
         Mega mega = new Mega();
         mega.download(city.getMapCash(), getString(R.string.map_cash_path));
         String dirPath = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0).applicationInfo.dataDir;
