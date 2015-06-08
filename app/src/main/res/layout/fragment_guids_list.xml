@@ -1,36 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView
-    android:id="@+id/my_recycler_view"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--android:id="@+id/my_recycler_view"-->
 
-    android:layout_width="match_parent"
+<!--android:layout_width="match_parent"-->
 
-    android:layout_height="match_parent"/>
-    <!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--android:layout_width="match_parent" android:layout_height="match_parent"-->
-    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+<!--android:layout_height="match_parent" />-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical"
 
-    <!--android:orientation="vertical">-->
+             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <!--<TextView-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="fill_parent"-->
-    <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
-    <!--android:visibility="gone"-->
-    <!--android:text="Large Text"-->
-    <!--android:id="@+id/error_msg"-->
-    <!--android:gravity="center_vertical|center_horizontal"-->
-    <!--android:layout_margin="40dp"/>-->
-    <!--<android.support.v4.widget.SwipeRefreshLayout-->
-    <!--android:id="@+id/activity_main_swipe_refresh_layout"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content">-->
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/my_recycler_view"-->
-    <!--android:scrollbars="vertical"-->
-    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"/>-->
-    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
-    <!--</FrameLayout>-->
+    <TextView
+        android:id="@+id/error_msg"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="40dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="gone"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/activity_main_swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/my_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</FrameLayout>
