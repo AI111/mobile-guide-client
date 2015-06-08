@@ -20,7 +20,7 @@
         <item
             android:id="@+id/installed"
             android:icon="@drawable/ic_play_download_black_24dp"
-            android:title="Home"/>
+            android:title=""/>
         <item
             android:id="@+id/install"
             android:icon="@drawable/ic_shop_black_24dp"
