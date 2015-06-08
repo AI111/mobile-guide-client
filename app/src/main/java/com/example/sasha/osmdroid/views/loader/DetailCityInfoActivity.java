@@ -38,6 +38,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 
 /**
  * Created by sasha on 12/22/14.
@@ -90,7 +91,7 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
         imageView = (ImageView) findViewById(R.id.imageView3);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        //imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         name = (TextView) findViewById(R.id.textView9);
         descriptiionView = (TextView) findViewById(R.id.textView10);
         if (guide.installed) mFab.setImageResource(R.drawable.ic_delete_black_24dp);
@@ -148,12 +149,7 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
                     } else if (!mFabIsShown && scrollY <= DX) {
                         showFab(true);
                     }
-//                    if(scrollY<=DX){
-//                        float scale=(float)(DX-scrollY)/DX;
-//                        Log.d(MainActivity.LOG_TAG,"SCALE = "+scale);
-//                        mFab.setScaleY(scale);
-//                        mFab.setScaleX(scale);
-//                    }
+
                     return alpha;
                 }
             }
@@ -166,11 +162,7 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
         super.onDestroy();
         Log.d(MainActivity.LOG_TAG, "onDestroy DetailActivityt");
         unregisterReceiver(br);
-//        Picasso.with(this).cancelRequest(imageView);
-//        ((BitmapDrawable)imageView.getDrawable()).getBitmap().recycle();
-//        imageView.setImageDrawable(null);
 
-//        imageView=null;
     }
 
     @Override
@@ -410,11 +402,12 @@ public class DetailCityInfoActivity extends ActionBarActivity implements View.On
                 mNotifyManager.notify(id, mBuilder.build());
                 try {
                     Log.d(MainActivity.LOG_TAG, "MEGA LINK " + city.getMapCash());
-                    // mega.download(city.getCasMaphUri(), getString(R.string.map_cash_path));
+                    //  mega.download(city.getMapCash(), getString(R.string.map_cash_path));
                     //download maps cash from MEGA server
                     RestTemplate restTemplate = new RestTemplate();
                     restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                    GeoPoint[] geoPoints = restTemplate.getForObject(DownloadListFragment.url + "getPoints?id=2" + city.getId(), GeoPoint[].class);
+                    GeoPoint[] geoPoints = restTemplate.getForObject(DownloadListFragment.url + "points" + city.getId(), GeoPoint[].class);
+                    Log.d(MainActivity.LOG_TAG, Arrays.toString(geoPoints));
                     //download data structure
                     for (GeoPoint point : geoPoints) {
                         city.addPoint(point);

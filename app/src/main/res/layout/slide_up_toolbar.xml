@@ -120,7 +120,7 @@
                     android:minHeight="@dimen/sliding_overlay_blur_size"/>
             </LinearLayout>
 
-            <android.support.design.widget.FloatingActionButton
+            <com.melnykov.fab.FloatingActionButton
                 android:id="@+id/fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

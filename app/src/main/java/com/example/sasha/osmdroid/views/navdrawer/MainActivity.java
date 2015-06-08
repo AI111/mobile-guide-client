@@ -4,8 +4,10 @@ package com.example.sasha.osmdroid.views.navdrawer;
  * Created by sasha on 3/3/15.
  */
 
+import android.accounts.Account;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -25,6 +27,8 @@ import com.example.sasha.osmdroid.R;
 import com.example.sasha.osmdroid.views.loader.DownloadListFragment;
 import com.example.sasha.osmdroid.views.loader.InstalledItemFragment;
 import com.example.sasha.osmdroid.views.loader.OnItemClicklistener;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
@@ -35,6 +39,8 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
+
+import java.io.IOException;
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener, OnItemClicklistener,
         ConnectionCallbacks, OnConnectionFailedListener {
@@ -49,8 +55,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             new MyAdapter.MenuItem(R.string.install_cash, R.drawable.ic_shop_grey600_24dp),
             new MyAdapter.MenuItem(R.string.action_settings, R.drawable.ic_settings_grey600_24dp)
     };
-    String NAME = "Akash Bangad";
-    String EMAIL = "akash.bangad@android4devs.com";
+    String NAME = "name";
+    String EMAIL = "email";
     RecyclerView mRecyclerView;                           // Declaring RecyclerView
     MyAdapter mAdapter;                        // Declaring Adapter For Recycler View
     RecyclerView.LayoutManager mLayoutManager;            // Declaring Layout Manager as a linear layout manager
@@ -347,7 +353,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                         personPhotoUrl.length() - 2)
                         + 200;
                 mAdapter.changeTitle(personName, email, personPhotoUrl);
-
+                new GetIdTokenTask().execute();
 
             } else {
                 Toast.makeText(getApplicationContext(),
@@ -356,5 +362,33 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private class GetIdTokenTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
+            Account account = new Account(accountName, GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
+            String scopes = "audience:server:client_id:" + "191215476409-ng9efc9a11ss140jeeoh5jc1v4kq8dlh.apps.googleusercontent.com"; // Not the app's client ID.
+            String idToken = "";
+            try {
+                idToken = GoogleAuthUtil.getToken(getApplicationContext(), Plus.AccountApi.getAccountName(mGoogleApiClient), scopes);
+            } catch (IOException e) {
+                Log.e(com.example.sasha.osmdroid.views.loader.MainActivity.LOG_TAG, "Error retrieving ID token.", e);
+            } catch (GoogleAuthException e) {
+                Log.e(com.example.sasha.osmdroid.views.loader.MainActivity.LOG_TAG, "Error retrieving ID token.", e);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return idToken;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i(com.example.sasha.osmdroid.views.loader.MainActivity.LOG_TAG, "ID token: " + result);
+            //mStatus.setText(result);
+        }
+//
     }
 }

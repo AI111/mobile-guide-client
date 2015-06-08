@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,6 +50,7 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
     protected RecyclerView.LayoutManager mLayoutManager;
     protected ArrayList<Guide> guides = new ArrayList<>();
     int id = 1;
+    SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView errorMsg;
 
     //    public static final Guide[] cities = new Guide[]{
@@ -176,10 +178,18 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(MainActivity.LOG_TAG, "onCreateView");
-        View rootView = inflater.inflate(R.layout.city_downloader, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_guids_list, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
+        // mSwipeRefreshLayout =(SwipeRefreshLayout) rootView.findViewById(R.id.activity_main_swipe_refresh_layout);
+//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                getData();
+//                mSwipeRefreshLayout.setRefreshing(false);
+//            }
+//        });
         mRecyclerView.setItemViewCacheSize(6);
-        errorMsg = (TextView) rootView.findViewById(R.id.error_msg);
+        //  errorMsg = (TextView) rootView.findViewById(R.id.error_msg);
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mLayoutManager = new GridLayoutManager(getActivity(), 2);
         } else {
@@ -190,7 +200,6 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
         mRecyclerView.setLayoutManager(mLayoutManager);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         mRecyclerView.setItemAnimator(itemAnimator);
-        // specify an adapter (see also next example)
         mAdapter = new MyAdapter(guides);
         mAdapter.setOnItemClickListener(this);
 
@@ -251,7 +260,6 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
         public void onViewRecycled(MyViewHolder holder) {
             Log.d(MainActivity.LOG_TAG, "onViewRecycled ");
 //            ((BitmapDrawable)holder.image.getDrawable()).getBitmap().recycle();
-//
 //            holder.image.setImageDrawable(null);
 
         }
@@ -312,9 +320,6 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
 
         @Override
         public void onClick(View view) {
-            // if(mItemClickListener!=null)
-
-            // if (onItemClicklistener != null)
             onItemClicklistener.onClickItem(itemView, view, getPosition());
 
         }
@@ -360,10 +365,10 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
                 guides.clear();
                 guides.addAll(cityGuides);
                 mAdapter.notifyDataSetChanged();
-                errorMsg.setVisibility(View.GONE);
+//                errorMsg.setVisibility(View.GONE);
             } else {
-                errorMsg.setVisibility(View.VISIBLE);
-                errorMsg.setText(getString(R.string.no_connection));
+//                errorMsg.setVisibility(View.VISIBLE);
+                //               errorMsg.setText(getString(R.string.no_connection));
             }
         }
 

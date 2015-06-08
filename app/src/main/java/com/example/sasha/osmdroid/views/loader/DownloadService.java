@@ -27,6 +27,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -77,32 +78,33 @@ public class DownloadService extends IntentService {
         Log.d(MainActivity.LOG_TAG, "MEGA LINK " + city.getMapCash());
 
         //download maps cash from MEGA server
-        try {
-            downloadMegaFiles(city);
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            downloadMegaFiles(city);
+//        } catch (NoSuchPaddingException e) {
+//            e.printStackTrace();
+//        } catch (InvalidAlgorithmParameterException e) {
+//            e.printStackTrace();
+//        } catch (NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        } catch (BadPaddingException e) {
+//            e.printStackTrace();
+//        } catch (IllegalBlockSizeException e) {
+//            e.printStackTrace();
+//        } catch (InvalidKeyException e) {
+//            e.printStackTrace();
+//        } catch (PackageManager.NameNotFoundException e) {
+//            e.printStackTrace();
+//        }
         RestTemplate restTemplate = new RestTemplate();
 
         try {
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-            GeoPoint[] geoPoints = restTemplate.getForObject(DownloadListFragment.url + "getPoints?id=2" + city.getId(), GeoPoint[].class);
+            GeoPoint[] geoPoints = restTemplate.getForObject(DownloadListFragment.url + "points", GeoPoint[].class);
+            Log.d(MainActivity.LOG_TAG, Arrays.toString(geoPoints));
             //download data structure
             for (GeoPoint point : geoPoints) {
                 city.addPoint(point);
@@ -131,6 +133,8 @@ public class DownloadService extends IntentService {
 
     private void downloadMegaFiles(Guide city) throws NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IOException, JSONException, BadPaddingException, IllegalBlockSizeException, InvalidKeyException, PackageManager.NameNotFoundException {
         Mega mega = new Mega();
+        File folder = new File(getString(R.string.map_cash_path));
+        if (!folder.exists()) folder.mkdir();
         mega.download(city.getMapCash(), getString(R.string.map_cash_path));
         String dirPath = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0).applicationInfo.dataDir;
         String name = mega.download(city.getDataCash(), dirPath);

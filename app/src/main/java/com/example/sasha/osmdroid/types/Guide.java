@@ -8,9 +8,11 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by sasha on 12/21/14.
@@ -20,7 +22,9 @@ public class Guide implements Serializable {
     private static final long serialVersionUID = -7060210544600464481L;
     public boolean installed;
     @ForeignCollectionField(eager = true)
-    public Collection<GeoPoint> points;// = new ArrayList<GeoPoint>();
+    public Collection<GeoPoint> points = new ArrayList<GeoPoint>();
+    @DatabaseField
+    Locale locale;
     @DatabaseField(id = true, canBeNull = false)
     private int id;
     @DatabaseField()
@@ -62,6 +66,14 @@ public class Guide implements Serializable {
     public Guide() {
         super();
         // points = new ArrayList<GeoPoint>();
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
     }
 
     public String getFullImgUrl() {
