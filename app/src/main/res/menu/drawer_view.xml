@@ -20,15 +20,15 @@
         <item
             android:id="@+id/installed"
             android:icon="@drawable/ic_play_download_black_24dp"
-            android:title=""/>
+            android:title="@string/installed"/>
         <item
             android:id="@+id/install"
             android:icon="@drawable/ic_shop_black_24dp"
-            android:title="Messages"/>
+            android:title="@string/install"/>
         <item
             android:id="@+id/setting"
             android:icon="@drawable/ic_settings_black_24dp"
-            android:title="Friends"/>
+            android:title="@string/action_settings"/>
 
     </group>
 
@@ -36,7 +36,7 @@
         <menu>
             <item
                 android:icon="@drawable/ic_info_outline_black_24dp"
-                android:title="Sub item 2"/>
+                android:title="@string/info"/>
         </menu>
     </item>
 

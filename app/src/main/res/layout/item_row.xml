@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/menu_item"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/common_signin_btn_dark_text_default"
+    android:orientation="horizontal"
+    android:paddingBottom="15dp"
+    android:paddingTop="15dp">
+
+
+    <ImageView
+        android:id="@+id/rowIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:src="@drawable/ic_info_outline_black_24dp"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:background="@android:color/darker_gray"/>
+
+    <TextView
+        android:id="@+id/rowText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="Medium Textd"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/primary_text"/>
+
+</LinearLayout>

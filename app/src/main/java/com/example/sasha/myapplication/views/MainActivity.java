@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         switch (menuItem.getItemId()) {
                             case R.id.installed:
-                                //fragmentManager.beginTransaction().replace(R.id.container,new InstalledItemFragment()).commit();
+                                fragmentManager.beginTransaction().replace(R.id.container, new InstalledItemFragment()).commit();
                                 break;
                             case R.id.install:
                                 fragmentManager.beginTransaction().replace(R.id.container, new DownloadListFragment()).commit();

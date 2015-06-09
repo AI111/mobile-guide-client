@@ -24,7 +24,7 @@ public class Guide implements Serializable {
     public Collection<GeoPoint> points = new ArrayList<GeoPoint>();
     @DatabaseField(id = true, canBeNull = false)
     private int guide_id;
-    @DatabaseField()
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
     private Locale locale;
     @DatabaseField()
     private String name;

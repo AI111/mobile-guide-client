@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -25,8 +26,15 @@ import java.util.Arrays;
  * Created by sasha on 3/6/15.
  */
 public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClicklistener, MyOnItemGestureListener<OverlayItem, GeoPoint>, View.OnClickListener {
-    public static final String ID_TAG = "CITY_ID";
 
+    public static final String ID_TAG = "CITY_ID";
+    MyAdapter.MenuItem[] items = new MyAdapter.MenuItem[]{
+            new MyAdapter.MenuItem(R.string.showplace, R.drawable.cathedral_48),
+            new MyAdapter.MenuItem(R.string.restaurant, R.drawable.restaurant_48),
+            new MyAdapter.MenuItem(R.string.museum, R.drawable.restaurant_48)
+    };
+    RecyclerView mRecyclerView;
+    MyAdapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
 
     DrawerLayout Drawer;
@@ -54,10 +62,38 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
                     .commit();
             Log.d(MainActivity.LOG_TAG, "commit  MainMapActivity");
         }
+        mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
+        mRecyclerView.setHasFixedSize(true);
+
+        mAdapter = new MyAdapter(this, items, NAME, EMAIL, null, true);
+
+        mRecyclerView.setAdapter(mAdapter);
+
+        mLayoutManager = new LinearLayoutManager(this);
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        Drawer = (DrawerLayout) findViewById(R.id.DrawerLayout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, Drawer, null, R.string.open, R.string.close) {
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+
+            }
+
+        };
 
 
         Drawer.setDrawerListener(mDrawerToggle); // Drawer Listener set to the Drawer toggle
         mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
+        mAdapter.setOnItemClickListener(this);
         mapFragment.setOnMarkerClickListener(this);
 //
         try {

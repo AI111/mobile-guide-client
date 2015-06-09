@@ -81,27 +81,27 @@ public class DownloadService extends IntentService {
         Log.d(MainActivity.LOG_TAG, "MEGA LINK " + city.getMapCash());
 
         //download maps cash from MEGA server
-//        try {
-//            downloadMegaFiles(city);
-//        } catch (NoSuchPaddingException e) {
-//            e.printStackTrace();
-//        } catch (InvalidAlgorithmParameterException e) {
-//            e.printStackTrace();
-//        } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        } catch (BadPaddingException e) {
-//            e.printStackTrace();
-//        } catch (IllegalBlockSizeException e) {
-//            e.printStackTrace();
-//        } catch (InvalidKeyException e) {
-//            e.printStackTrace();
-//        } catch (PackageManager.NameNotFoundException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            downloadMegaFiles(city);
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         RestTemplate restTemplate = new RestTemplate();
 
         try {

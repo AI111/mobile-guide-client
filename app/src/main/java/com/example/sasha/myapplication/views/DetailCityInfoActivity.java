@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -23,7 +24,6 @@ import android.widget.TextView;
 
 import com.example.sasha.myapplication.R;
 import com.example.sasha.myapplication.database.Guide;
-import com.melnykov.fab.FloatingActionButton;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.squareup.picasso.Picasso;
 

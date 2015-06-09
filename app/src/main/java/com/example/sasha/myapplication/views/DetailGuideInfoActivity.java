@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -25,8 +26,11 @@ import android.widget.TextView;
 
 import com.example.sasha.myapplication.R;
 import com.example.sasha.myapplication.database.Guide;
+import com.example.sasha.myapplication.database.HelperFactory;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.squareup.picasso.Picasso;
+
+import java.sql.SQLException;
 
 /**
  * Created by sasha on 12/22/14.
@@ -40,7 +44,6 @@ public class DetailGuideInfoActivity extends AppCompatActivity implements View.O
     public static final String FINISH = "finish";
     ProgressBar progressBar;
     ImageView imageView;
-    TextView name;
     TextView descriptiionView;
     ActionBar mActionBar;
     Guide guide;
@@ -78,9 +81,7 @@ public class DetailGuideInfoActivity extends AppCompatActivity implements View.O
         guide = (Guide) getIntent().getSerializableExtra(SER_KEY);
         imageView = (ImageView) findViewById(R.id.backdrop);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
-        //progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        //imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        //name = (TextView) findViewById(R.id.textView9);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         descriptiionView = (TextView) findViewById(R.id.description);
         // if (guide.installed) mFab.setImageResource(R.drawable.ic_delete_black_24dp);
         descriptiionView.setText(guide.getDescription());
@@ -96,7 +97,7 @@ public class DetailGuideInfoActivity extends AppCompatActivity implements View.O
         ViewCompat.setTransitionName(imageView, VIEW_NAME_HEADER_IMAGE);
         //ViewCompat.setTransitionName(name, VIEW_NAME_HEADER_TITLE);
         loadItem();
-
+        mFab.setOnClickListener(this);
 //
 
     }
@@ -209,9 +210,9 @@ public class DetailGuideInfoActivity extends AppCompatActivity implements View.O
 //                    e.printStackTrace();
 //                }
 //                break;
-            case android.R.id.home:
-                onBackPressed();
-                break;
+//            case android.R.id.home:
+//                onBackPressed();
+//                break;
             default:
                 break;
         }
@@ -303,17 +304,17 @@ public class DetailGuideInfoActivity extends AppCompatActivity implements View.O
             case R.id.fab:
                 String path;
                 if (guide.installed) {
-                    // new CashRemover().execute(guide);
+                    new CashRemover().execute(guide);
                 } else {
 
-//                    Intent intent = new Intent(getApplicationContext(), DownloadService.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putSerializable(DetailCityInfoActivity2.SER_KEY, guide);
-//                    intent.putExtras(bundle);
-//                    startService(intent);
-//                    progressBar.setVisibility(View.VISIBLE);
-//                    progressBar.setIndeterminate(true);
-//                    mFab.setVisibility(View.GONE);
+                    Intent intent = new Intent(getApplicationContext(), DownloadService.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(DetailGuideInfoActivity.SER_KEY, guide);
+                    intent.putExtras(bundle);
+                    startService(intent);
+                    progressBar.setVisibility(View.VISIBLE);
+                    progressBar.setIndeterminate(true);
+                    mFab.setVisibility(View.GONE);
                     //new CashDownloader().execute(guide);
                 }
                 break;
@@ -321,153 +322,53 @@ public class DetailGuideInfoActivity extends AppCompatActivity implements View.O
 
     }
 
-//    private class CashDownloader extends AsyncTask<Guide, String, Boolean> {
-//        NotificationManager mNotifyManager;
-//        Notification.Builder mBuilder;
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            mNotifyManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//            mBuilder = new Notification.Builder(getApplicationContext());
-//            mBuilder.setContentTitle("Picture Download")
-//                    .setContentText("Download in progress")
-//                    .setSmallIcon(R.drawable.png)
-//                    .setOngoing(true);
-//        }
-//
-//        public void updateList() {
-//
-//        }
-//
-//        @Override
-//        protected Boolean doInBackground(Guide... index) {
-//            Log.v(MainActivity.LOG_TAG, "doInBackground" + index[0]);
-//            Log.v(MainActivity.LOG_TAG, "doInBackground");
-//            for (Guide city : index) {
-//                Mega mega = new Mega();
-//                mBuilder.setProgress(0, 0, true);
-//                mNotifyManager.notify(id, mBuilder.build());
-//                try {
-//                    Log.d(MainActivity.LOG_TAG, "MEGA LINK " + city.getMapCash());
-//                    // mega.download(city.getCasMaphUri(), getString(R.string.map_cash_path));
-//                    //download maps cash from MEGA server
-//                    RestTemplate restTemplate = new RestTemplate();
-//                    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-//                    GeoPoint[] geoPoints = restTemplate.getForObject(DownloadListFragment.url + "getPoints?id=2" + city.getId(), GeoPoint[].class);
-//                    //download data structure
-//                    for (GeoPoint point : geoPoints) {
-//                        city.addPoint(point);
-//                    }
-//
-//                    HelperFactory.getHelper().getGuideDAO().create(city);
-//                    city.installed = true;
-//
-//                    //save data structure in database
-//
-//                    //download audio foto and text for use with structure
-////
-////                } catch (NoSuchAlgorithmException e) {
-////                    e.printStackTrace();
-////                } catch (NoSuchPaddingException e) {
-////                    e.printStackTrace();
-////                } catch (InvalidKeyException e) {
-////                    e.printStackTrace();
-////                } catch (InvalidAlgorithmParameterException e) {
-////                    e.printStackTrace();
-////                } catch (IOException e) {
-////                    e.printStackTrace();
-////                } catch (IllegalBlockSizeException e) {
-////                    e.printStackTrace();
-////                } catch (BadPaddingException e) {
-////                    e.printStackTrace();
-////                } catch (JSONException e) {
-////                    e.printStackTrace();
-//                } catch (SQLException e) {
-//                    e.printStackTrace();
-//                    // Toast.makeText(getActivity(), getString(R.string.net_error), Toast.LENGTH_LONG).show();
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    // Toast.makeText(getActivity(), getString(R.string.net_error), Toast.LENGTH_LONG).show();
-//                }
-//            }
-//            return true;
-//        }
-//
-//        @Override
-//        protected void onProgressUpdate(String... values) {
-//            super.onProgressUpdate(values);
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Boolean complete) {
-//            super.onPostExecute(complete);
-//            if (complete) {
-//                mBuilder.setContentText("Download complete")
-//                        // Removes the progress bar
-//                        .setProgress(0, 0, false)
-//                        .setOngoing(false);
-//                mFab.setImageResource(R.drawable.ic_delete_black_24dp);
-//            } else {
-//                mBuilder.setContentText("Download error")
-//                        // Removes the progress bar
-//                        .setProgress(0, 0, false)
-//                        .setOngoing(false);
-//            }
-//
-//            mNotifyManager.notify(id, mBuilder.build());
-//
-//        }
-//    }
-//
-//    private class CashRemover extends AsyncTask<Guide, String, Boolean> {
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//
-//        }
-//
-//        @Override
-//        protected Boolean doInBackground(Guide... index) {
-//            for (Guide city : index) {
-//
-//                try {
-//
-//                    if (city.points.size() == 0) {
-//                        city = HelperFactory.getHelper().getGuideDAO().queryForId(city.getId());
-//                        //city.points=HelperFactory.getHelper().getGeoPointDAO().queryForEq("cityGuide_id",city.getId());
-//                    }
-//                    city.points.clear();
-//                    HelperFactory.getHelper().getGuideDAO().delete(city);
-//                    city.installed = false;
-//
-//
-//                } catch (SQLException e) {
-//                    e.printStackTrace();
-//                    // Toast.makeText(getActivity(), getString(R.string.net_error), Toast.LENGTH_LONG).show();
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    // Toast.makeText(getActivity(), getString(R.string.net_error), Toast.LENGTH_LONG).show();
-//                }
-//            }
-//            return true;
-//        }
-//
-//        @Override
-//        protected void onProgressUpdate(String... values) {
-//            super.onProgressUpdate(values);
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Boolean complete) {
-//            super.onPostExecute(complete);
-//            mFab.setImageResource(R.drawable.ic_play_download_black_24dp);
-//
-//
-//        }
-//    }
+
+    private class CashRemover extends AsyncTask<Guide, String, Boolean> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Guide... index) {
+            for (Guide city : index) {
+
+                try {
+
+                    if (city.points.size() == 0) {
+                        city = HelperFactory.getHelper().getGuideDAO().queryForId(city.getId());
+                        //city.points=HelperFactory.getHelper().getGeoPointDAO().queryForEq("cityGuide_id",city.getId());
+                    }
+                    city.points.clear();
+                    HelperFactory.getHelper().getGuideDAO().delete(city);
+                    city.installed = false;
+
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    // Toast.makeText(getActivity(), getString(R.string.net_error), Toast.LENGTH_LONG).show();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // Toast.makeText(getActivity(), getString(R.string.net_error), Toast.LENGTH_LONG).show();
+                }
+            }
+            return true;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean complete) {
+            super.onPostExecute(complete);
+            mFab.setImageResource(R.drawable.ic_play_download_black_24dp);
+
+
+        }
+    }
 }
