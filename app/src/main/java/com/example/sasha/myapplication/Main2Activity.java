@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,11 +22,13 @@ import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
@@ -41,6 +44,8 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     ImageView imageView;
     Button buttonIn;
     Button buttonOut;
+    CheckBox checkBox;
+    TextView textViewToken;
     private GoogleApiClient mGoogleApiClient;
     private boolean mIntentInProgress;
     private boolean mSignInClicked;
@@ -54,16 +59,22 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_main2);
         textView = (TextView) findViewById(R.id.textView);
         imageView = (ImageView) findViewById(R.id.imageView);
+        textViewToken = (TextView) findViewById(R.id.textView4);
+        findViewById(R.id.button2).setOnClickListener(this);
+        findViewById(R.id.button3).setOnClickListener(this);
+        findViewById(R.id.button4).setOnClickListener(this);
+        checkBox = (CheckBox) findViewById(R.id.checkBox);
 
-        buttonIn = (Button) findViewById(R.id.button2);
-        buttonOut = (Button) findViewById(R.id.button3);
-
-        buttonIn.setOnClickListener(this);
-        buttonOut.setOnClickListener(this);
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).addApi(Plus.API)
-                .addScope(Plus.SCOPE_PLUS_LOGIN).build();
+                .addScope(Plus.SCOPE_PLUS_LOGIN).addScope(Plus.SCOPE_PLUS_PROFILE).addScope(new Scope(Scopes.PROFILE)).build();
+
+
+
+
+
+
         super.onResume();
     }
 
@@ -236,7 +247,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
                 Picasso.with(this).load(personPhotoUrl).transform(new RoundedTransformation(100, 8)).into(imageView);
                 textView.setText(personName + " " + email);
 
-                new GetIdTokenTask().execute();
+
             } else {
                 Toast.makeText(getApplicationContext(),
                         "Person information is null", Toast.LENGTH_LONG).show();
@@ -255,19 +266,38 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
             case R.id.button3:
                 signOutFromGplus();
                 break;
+            case R.id.button4:
+                new GetIdTokenTask().execute();
+                break;
         }
     }
 
     private class GetIdTokenTask extends AsyncTask<String, Void, String> {
+        private final static String G_PLUS_SCOPE =
+                "oauth2:https://www.googleapis.com/auth/plus.me";
+        private final static String USERINFO_SCOPE =
+                "https://www.googleapis.com/auth/userinfo.profile";
+        private final static String EMAIL_SCOPE =
+                "https://www.googleapis.com/auth/userinfo.email";
+        private final static String accesToken = G_PLUS_SCOPE + " " + USERINFO_SCOPE;
+        String google_id = "audience:server:client_id:221601576513-9gdgmghqm3mkss52ehl4fifv08tpo3v3.apps.googleusercontent.com"; // Not the app's client ID.
+        private String SCOPES;
+
+        @Override
+        protected void onPreExecute() {
+            SCOPES = checkBox.isChecked() ? accesToken : google_id;
+            super.onPreExecute();
+        }
 
         @Override
         protected String doInBackground(String... params) {
+
             String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
             Account account = new Account(accountName, GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
-            String scopes = "audience:server:client_id:" + "249211101881-a4gv81uhccusdvkaehjd051n8dsq8185.apps.googleusercontent.com"; // Not the app's client ID.
+
             String idToken = "";
             try {
-                idToken = GoogleAuthUtil.getToken(getApplicationContext(), account, scopes);
+                idToken = GoogleAuthUtil.getTokenWithNotification(getApplicationContext(), account, SCOPES, new Bundle());
             } catch (IOException e) {
                 Log.e(MainActivity.LOG_TAG, "Error retrieving ID token.", e);
             } catch (GoogleAuthException e) {
@@ -279,6 +309,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         @Override
         protected void onPostExecute(String result) {
             Log.i(MainActivity.LOG_TAG, "ID token:  " + result);
+            textViewToken.setText(result);
 
         }
 

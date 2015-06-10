@@ -1,4 +1,5 @@
-package com.example.sasha.myapplication.mega; /*******************************************************************************
+package com.example.sasha.myapplication.mega;
+/*******************************************************************************
  * Copyright (c) 2013 Ale46.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
@@ -21,7 +22,6 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-//import javax.xml.bind.DatatypeConverter;
 
 public class MegaCrypt {
     private static final char[] CA = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();

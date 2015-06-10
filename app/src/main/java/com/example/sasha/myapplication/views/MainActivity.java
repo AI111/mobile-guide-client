@@ -1,5 +1,6 @@
 package com.example.sasha.myapplication.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -8,12 +9,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.example.sasha.myapplication.Main2Activity;
 import com.example.sasha.myapplication.R;
+import com.example.sasha.myapplication.database.GeoPoint;
+import com.example.sasha.myapplication.database.Guide;
+import com.example.sasha.myapplication.database.HelperFactory;
+import com.j256.ormlite.table.TableUtils;
+
+import java.sql.SQLException;
 
 
 /**
@@ -57,6 +66,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.auth:
+                startActivity(new Intent(this, Main2Activity.class));
+                return true;
+            case R.id.clear_db:
+                try {
+                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), Guide.class);
+                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), GeoPoint.class);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return true;
+            case R.id.show_db:
+                try {
+                    Log.d(MainActivity.LOG_TAG, "\n DB = " + HelperFactory.getHelper().getGuideDAO().getAllCities() + "\n----------\n" + HelperFactory.getHelper().getGeoPointDAO().getAllPoints());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return true;
+            case R.id.update_db:
+                try {
+                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), Guide.class);
+                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), GeoPoint.class);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    TableUtils.createTable(HelperFactory.getHelper().getConnectionSource(), Guide.class);
+                    TableUtils.createTable(HelperFactory.getHelper().getConnectionSource(), GeoPoint.class);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);

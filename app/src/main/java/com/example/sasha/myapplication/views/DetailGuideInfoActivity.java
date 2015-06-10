@@ -59,8 +59,8 @@ public class DetailGuideInfoActivity extends AppCompatActivity implements View.O
 
             if (status == STATUS_FINISH) {
                 Log.d(MainActivity.LOG_TAG, "onReceive " + STATUS_FINISH);
-                progressBar.setVisibility(View.GONE);
-                progressBar.setIndeterminate(false);
+//                progressBar.setVisibility(View.GONE);
+//                progressBar.setIndeterminate(false);
                 mFab.setImageResource(R.drawable.ic_delete_black_24dp);
                 mFab.setVisibility(View.VISIBLE);
             }
@@ -81,7 +81,7 @@ public class DetailGuideInfoActivity extends AppCompatActivity implements View.O
         guide = (Guide) getIntent().getSerializableExtra(SER_KEY);
         imageView = (ImageView) findViewById(R.id.backdrop);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        //progressBar = (ProgressBar) findViewById(R.id.progressBar);
         descriptiionView = (TextView) findViewById(R.id.description);
         // if (guide.installed) mFab.setImageResource(R.drawable.ic_delete_black_24dp);
         descriptiionView.setText(guide.getDescription());
@@ -312,8 +312,8 @@ public class DetailGuideInfoActivity extends AppCompatActivity implements View.O
                     bundle.putSerializable(DetailGuideInfoActivity.SER_KEY, guide);
                     intent.putExtras(bundle);
                     startService(intent);
-                    progressBar.setVisibility(View.VISIBLE);
-                    progressBar.setIndeterminate(true);
+//                    progressBar.setVisibility(View.VISIBLE);
+//                    progressBar.setIndeterminate(true);
                     mFab.setVisibility(View.GONE);
                     //new CashDownloader().execute(guide);
                 }

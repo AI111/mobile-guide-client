@@ -53,4 +53,5 @@ dependencies {
 
     compile 'com.google.android.gms:play-services-base:7.5.0'
     compile 'com.google.android.gms:play-services-plus:7.5.0'
+    compile 'com.google.android.gms:play-services-identity:7.5.0'
 }

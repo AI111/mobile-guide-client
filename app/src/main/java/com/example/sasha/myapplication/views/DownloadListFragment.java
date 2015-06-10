@@ -26,16 +26,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.sasha.myapplication.R;
-import com.example.sasha.myapplication.database.GeoPoint;
 import com.example.sasha.myapplication.database.Guide;
-import com.example.sasha.myapplication.database.HelperFactory;
-import com.j256.ormlite.table.TableUtils;
 import com.squareup.picasso.Picasso;
 
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -44,7 +40,7 @@ import java.util.Arrays;
  */
 
 public class DownloadListFragment extends Fragment implements OnItemClicklistener {
-    public static String url = "http://192.168.0.103:8080";
+    public static String url = "https://nodejs-umap.rhcloud.com/";
     protected RecyclerView mRecyclerView;
     protected MyAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
@@ -136,36 +132,7 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
                         });
                 alertDialog.show();
                 break;
-            case R.id.clear_db:
-                try {
-                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), Guide.class);
-                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), GeoPoint.class);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case R.id.show_db:
-                try {
-                    Log.d(MainActivity.LOG_TAG, "\n DB = " + HelperFactory.getHelper().getGuideDAO().getAllCities() + "\n----------\n" + HelperFactory.getHelper().getGeoPointDAO().getAllPoints());
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case R.id.update_db:
-                try {
-                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), Guide.class);
-                    TableUtils.clearTable(HelperFactory.getHelper().getConnectionSource(), GeoPoint.class);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
 
-                try {
-                    TableUtils.createTable(HelperFactory.getHelper().getConnectionSource(), Guide.class);
-                    TableUtils.createTable(HelperFactory.getHelper().getConnectionSource(), GeoPoint.class);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                break;
             default:
                 break;
 
