@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:paddingLeft="16dp"
-        android:src="@drawable/ic_launcher"/>
+        android:src="@drawable/ic_info_outline_black_24dp"/>
 
     <View
         android:layout_width="1dp"
