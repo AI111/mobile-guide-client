@@ -1,4 +1,4 @@
-package com.example.sasha.myapplication.mega;
+package com.example.sasha.myapplication.utils.mega;
 /*******************************************************************************
  * Copyright (c) 2013 Ale46.
  * All rights reserved. This program and the accompanying materials

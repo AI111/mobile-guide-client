@@ -38,9 +38,15 @@
     <string name="description">Description: </string>
     <string name="rating">Reting: </string>
 
+    <!-- SERVER URLS -->
+    <string name="server_domain" translatable="false">https://nodejs-umap.rhcloud.com</string>
+    <string name="get_guides" translatable="false">https://nodejs-umap.rhcloud.com/guides</string>
+    <string name="get_points" translatable="false">points</string>
+
+
     <!-- PATH FOR SAVED FILES -->
-    <string name="map_cash_path">/mnt/sdcard/osmdroid/</string>
-    <string name="data_cash">appCash</string>
+    <string name="map_cash_path" translatable="false">/mnt/sdcard/osmdroid/</string>
+    <string name="data_cash" translatable="false">appCash</string>
 
 
 

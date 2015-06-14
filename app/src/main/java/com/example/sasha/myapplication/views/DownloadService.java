@@ -13,7 +13,7 @@ import com.example.sasha.myapplication.R;
 import com.example.sasha.myapplication.database.GeoPoint;
 import com.example.sasha.myapplication.database.Guide;
 import com.example.sasha.myapplication.database.HelperFactory;
-import com.example.sasha.myapplication.mega.Mega;
+import com.example.sasha.myapplication.utils.mega.Mega;
 
 import org.json.JSONException;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -68,7 +68,7 @@ public class DownloadService extends IntentService {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onHandleIntent(Intent intent) {
-        Guide city = (Guide) intent.getSerializableExtra(DetailCityInfoActivity.SER_KEY);
+        Guide city = (Guide) intent.getSerializableExtra(DetailGuideInfoActivity.SER_KEY);
         Notification.Builder mBuilder = new Notification.Builder(getApplicationContext());
         mBuilder.setContentTitle("Picture Download")
                 .setContentText("Download in progress")
@@ -128,8 +128,8 @@ public class DownloadService extends IntentService {
         mNotifyManager.notify(id, mBuilder.build());
 
         Log.d(SERVICE_TAG, "FNISH id " + city.getId());
-        Intent intent1 = new Intent(DetailCityInfoActivity.BROADCAST_ACTION);
-        intent.putExtra(DetailCityInfoActivity.FINISH, DetailCityInfoActivity.STATUS_FINISH);
+        Intent intent1 = new Intent(DetailGuideInfoActivity.BROADCAST_ACTION);
+        intent.putExtra(DetailGuideInfoActivity.FINISH, DetailGuideInfoActivity.STATUS_FINISH);
         sendBroadcast(intent1);
 
     }

@@ -28,20 +28,13 @@ import java.util.Arrays;
 public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClicklistener, MyOnItemGestureListener<OverlayItem, GeoPoint>, View.OnClickListener {
 
     public static final String ID_TAG = "CITY_ID";
-    MyAdapter.MenuItem[] items = new MyAdapter.MenuItem[]{
-            new MyAdapter.MenuItem(R.string.showplace, R.drawable.cathedral_48),
-            new MyAdapter.MenuItem(R.string.restaurant, R.drawable.restaurant_48),
-            new MyAdapter.MenuItem(R.string.museum, R.drawable.restaurant_48)
-    };
+
     RecyclerView mRecyclerView;
-    MyAdapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
 
     DrawerLayout Drawer;
     ActionBarDrawerToggle mDrawerToggle;
     private MapFragment mapFragment;
-    private String NAME = "";
-    private String EMAIL = "";
     private String dirPath;
 
     @Override
@@ -65,9 +58,7 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
         mRecyclerView.setHasFixedSize(true);
 
-        mAdapter = new MyAdapter(this, items, NAME, EMAIL, null, true);
 
-        mRecyclerView.setAdapter(mAdapter);
 
         mLayoutManager = new LinearLayoutManager(this);
 
@@ -93,7 +84,6 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
 
         Drawer.setDrawerListener(mDrawerToggle); // Drawer Listener set to the Drawer toggle
         mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
-        mAdapter.setOnItemClickListener(this);
         mapFragment.setOnMarkerClickListener(this);
 //
         try {

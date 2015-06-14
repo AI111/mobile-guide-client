@@ -280,7 +280,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         private final static String EMAIL_SCOPE =
                 "https://www.googleapis.com/auth/userinfo.email";
         private final static String accesToken = G_PLUS_SCOPE + " " + USERINFO_SCOPE;
-        String google_id = "audience:server:client_id:221601576513-9gdgmghqm3mkss52ehl4fifv08tpo3v3.apps.googleusercontent.com"; // Not the app's client ID.
+        private final String google_id = "audience:server:client_id:221601576513-9gdgmghqm3mkss52ehl4fifv08tpo3v3.apps.googleusercontent.com"; // Not the app's client ID.
         private String SCOPES;
 
         @Override

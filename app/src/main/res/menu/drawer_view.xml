@@ -32,11 +32,15 @@
 
     </group>
 
-    <item android:title="info">
+    <item android:title="@string/info">
         <menu>
             <item
                 android:icon="@drawable/ic_info_outline_black_24dp"
                 android:title="@string/info"/>
+            <item
+                android:id="@+id/login"
+                android:icon="@drawable/ic_person_outline_black_24dp"
+                android:title="@string/common_signin_button_text"/>
         </menu>
     </item>
 

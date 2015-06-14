@@ -1,4 +1,4 @@
-package com.example.sasha.myapplication.mega;
+package com.example.sasha.myapplication.utils.mega;
 
 import org.json.JSONException;
 import org.json.JSONObject;
