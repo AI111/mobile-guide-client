@@ -59,7 +59,6 @@ public class Guide implements Serializable {
         this.latitude = latitude;
         this.longitude = longitude;
 
-        //points = new ArrayList<GeoPoint>();
     }
 
     public Guide() {
@@ -204,6 +203,7 @@ public class Guide implements Serializable {
                 ", mapCash='" + mapCash + '\'' +
                 ", changed=" + changed +
                 ", points=\n" + (points == null ? null : Arrays.toString(points.toArray())) +
-                "}\n";
+                ", installed=" + installed +
+                " }\n";
     }
 }

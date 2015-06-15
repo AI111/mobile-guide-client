@@ -23,11 +23,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sasha.myapplication.R;
 import com.example.sasha.myapplication.database.Guide;
 import com.example.sasha.myapplication.database.HelperFactory;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.squareup.picasso.Picasso;
 
 import java.sql.SQLException;
@@ -37,10 +37,13 @@ import java.sql.SQLException;
  */
 public class DetailGuideInfoActivity extends AppCompatActivity implements View.OnClickListener {
     public final static String SER_KEY = "com.example.sasha.osmdroid.types.ser";
+    public static final String TOKEN = "google ID token";
     public static final String VIEW_NAME_HEADER_IMAGE = "detail:header:image";
     public static final String VIEW_NAME_HEADER_TITLE = "detail:header:title";
     public final static int STATUS_FINISH = 200;
-    public final static String BROADCAST_ACTION = "com.example.sasha.osmdroid";
+    public final static int STATUS_ERROR = 201;
+
+    public final static String BROADCAST_ACTION = "com.example.sasha.myapplication.views";
     public static final String FINISH = "finish";
     ProgressBar progressBar;
     ImageView imageView;
@@ -55,15 +58,24 @@ public class DetailGuideInfoActivity extends AppCompatActivity implements View.O
 
 
             int status = intent.getIntExtra(FINISH, 0);
-            Log.d(MainActivity.LOG_TAG, "onReceive " + STATUS_FINISH);
-
-            if (status == STATUS_FINISH) {
-                Log.d(MainActivity.LOG_TAG, "onReceive " + STATUS_FINISH);
-//                progressBar.setVisibility(View.GONE);
-//                progressBar.setIndeterminate(false);
-                mFab.setImageResource(R.drawable.ic_delete_black_24dp);
-                mFab.setVisibility(View.VISIBLE);
+            Log.d(MainActivity.LOG_TAG, "onReceive " + status);
+            switch (status) {
+                case STATUS_FINISH:
+                    Log.d(MainActivity.LOG_TAG, "onReceive " + STATUS_FINISH);
+                    progressBar.setVisibility(View.GONE);
+                    progressBar.setIndeterminate(false);
+                    mFab.setImageResource(R.drawable.ic_delete_black_24dp);
+                    mFab.setVisibility(View.VISIBLE);
+                    break;
+                case STATUS_ERROR:
+                    Log.d(MainActivity.LOG_TAG, "onReceive " + STATUS_ERROR);
+                    progressBar.setVisibility(View.GONE);
+                    progressBar.setIndeterminate(false);
+                    Toast.makeText(getApplicationContext(), "DOWNLOAD ERROR", Toast.LENGTH_LONG).show();
+                    mFab.setVisibility(View.VISIBLE);
+                    break;
             }
+
         }
     };
     private boolean mFabIsShown = true;
@@ -81,7 +93,7 @@ public class DetailGuideInfoActivity extends AppCompatActivity implements View.O
         guide = (Guide) getIntent().getSerializableExtra(SER_KEY);
         imageView = (ImageView) findViewById(R.id.backdrop);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
-        //progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         descriptiionView = (TextView) findViewById(R.id.description);
         // if (guide.installed) mFab.setImageResource(R.drawable.ic_delete_black_24dp);
         descriptiionView.setText(guide.getDescription());
@@ -130,45 +142,7 @@ public class DetailGuideInfoActivity extends AppCompatActivity implements View.O
 
     }
 
-    private void showFab(boolean animated) {
-        if (mFab == null) {
-            return;
-        }
-        if (!mFabIsShown) {
-            if (animated) {
-                ViewPropertyAnimator.animate(mFab).cancel();
-                ViewPropertyAnimator.animate(mFab).scaleX(1).scaleY(1).setDuration(200).start();
-            } else {
-                mFab.setScaleX(1);
-                mFab.setScaleY(1);
-            }
-            mFabIsShown = true;
-        } else {
-            // Ensure that FAB is shown
-            mFab.setScaleX(1);
-            mFab.setScaleY(1);
-        }
-    }
 
-    private void hideFab(boolean animated) {
-        if (mFab == null) {
-            return;
-        }
-        if (mFabIsShown) {
-            if (animated) {
-                ViewPropertyAnimator.animate(mFab).cancel();
-                ViewPropertyAnimator.animate(mFab).scaleX(0).scaleY(0).setDuration(200).start();
-            } else {
-                mFab.setScaleX(0);
-                mFab.setScaleY(0);
-            }
-            mFabIsShown = false;
-        } else {
-            // Ensure that FAB is hidden
-            mFab.setScaleX(0);
-            mFab.setScaleY(0);
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -227,8 +201,8 @@ public class DetailGuideInfoActivity extends AppCompatActivity implements View.O
     @Override
     public void onBackPressed() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            hideFab(false);
-        super.onBackPressed();
+
+            super.onBackPressed();
     }
 
     private void loadItem() {
@@ -238,7 +212,6 @@ public class DetailGuideInfoActivity extends AppCompatActivity implements View.O
         } else {
 
             loadFullSizeImage();
-            showFab(true);
         }
     }
 
@@ -269,7 +242,6 @@ public class DetailGuideInfoActivity extends AppCompatActivity implements View.O
                 public void onTransitionEnd(Transition transition) {
                     // As the transition has ended, we can now load the full-size image
                     loadFullSizeImage();
-                    showFab(true);
 
                     // Make sure we remove ourselves as a listener
                     transition.removeListener(this);
@@ -316,8 +288,8 @@ public class DetailGuideInfoActivity extends AppCompatActivity implements View.O
                     bundle.putSerializable(DetailGuideInfoActivity.SER_KEY, guide);
                     intent.putExtras(bundle);
                     startService(intent);
-//                    progressBar.setVisibility(View.VISIBLE);
-//                    progressBar.setIndeterminate(true);
+                    progressBar.setVisibility(View.VISIBLE);
+                    progressBar.setIndeterminate(true);
                     mFab.setVisibility(View.GONE);
                     //new CashDownloader().execute(guide);
                 }

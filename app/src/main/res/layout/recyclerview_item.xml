@@ -95,7 +95,7 @@
                 android:layout_alignTop="@+id/ratingBar"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/checked_24"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
         </RelativeLayout>
 

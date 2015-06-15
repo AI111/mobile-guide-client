@@ -8,8 +8,8 @@ import java.util.Arrays;
 
 @DatabaseTable(tableName = "points")
 public class GeoPoint {
-    @DatabaseField(generatedId = true)
-    public int id;
+    @DatabaseField(id = true, canBeNull = false)
+    public int point_id;
     @DatabaseField()
     public String title;
     @DatabaseField(dataType = DataType.ENUM_INTEGER)
@@ -27,7 +27,7 @@ public class GeoPoint {
     public double latitude;
     @DatabaseField()
     public double longitude;
-    @DatabaseField(foreign = true, foreignAutoRefresh = true)
+    @DatabaseField(foreign = true, foreignAutoRefresh = true,canBeNull = true)
     private Guide cityGuide;
 
     public GeoPoint(String title, PointType type, String description, String text, String[] galery, String audio, double latitude, double longitude, Guide cityGuide) {

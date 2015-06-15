@@ -178,6 +178,7 @@ public class DownloadListFragment extends Fragment implements OnItemClicklistene
         if (view.getId() == R.id.imageView2) {
             Intent intent = new Intent(getActivity(), DetailGuideInfoActivity.class);
             Bundle bundle = new Bundle();
+            bundle.putString(DetailGuideInfoActivity.TOKEN, MainActivity.token);
             bundle.putSerializable(DetailGuideInfoActivity.SER_KEY, guides.get(position));
             intent.putExtras(bundle);
             ActivityOptionsCompat activityOptions =

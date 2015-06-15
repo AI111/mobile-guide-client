@@ -28,7 +28,6 @@ import java.io.InputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -42,15 +41,11 @@ import javax.crypto.NoSuchPaddingException;
  */
 public class DownloadService extends IntentService {
     private static final String SERVICE_TAG = "DOWNLOAD SERVICE";
+    Notification.Builder mBuilder;
     private String dataFolder;
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
-     * @param name Used to name the worker thread, important only for debugging.
-     */
-
     private NotificationManager mNotifyManager;
     private int id;
+    private Guide city;
 
     public DownloadService() {
         super("UMapCashLoader");
@@ -68,8 +63,8 @@ public class DownloadService extends IntentService {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onHandleIntent(Intent intent) {
-        Guide city = (Guide) intent.getSerializableExtra(DetailGuideInfoActivity.SER_KEY);
-        Notification.Builder mBuilder = new Notification.Builder(getApplicationContext());
+        city = (Guide) intent.getSerializableExtra(DetailGuideInfoActivity.SER_KEY);
+        mBuilder = new Notification.Builder(getApplicationContext());
         mBuilder.setContentTitle("Picture Download")
                 .setContentText("Download in progress")
                 .setSmallIcon(R.drawable.outline_star_24)
@@ -83,30 +78,20 @@ public class DownloadService extends IntentService {
         //download maps cash from MEGA server
         try {
             downloadMegaFiles(city);
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            error();
         }
+
         RestTemplate restTemplate = new RestTemplate();
 
         try {
+//            MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+//            converter
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-            GeoPoint[] geoPoints = restTemplate.getForObject(DownloadListFragment.url + "points", GeoPoint[].class);
+            GeoPoint[] geoPoints = restTemplate.getForObject(String.format(getString(R.string.get_points), city.getId()), GeoPoint[].class);
+            for (GeoPoint point : geoPoints) {
+                point.galery = restTemplate.getForObject(getString(R.string.get_imeges) + city.getId(), String[].class);
+            }
             Log.d(MainActivity.LOG_TAG, Arrays.toString(geoPoints));
             //download data structure
             for (GeoPoint point : geoPoints) {
@@ -117,9 +102,9 @@ public class DownloadService extends IntentService {
 
             //save data structure in database
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-
+            error();
             return;
         }
         mBuilder.setContentText("Download complete")
@@ -138,7 +123,7 @@ public class DownloadService extends IntentService {
         Mega mega = new Mega();
         File folder = new File(getString(R.string.map_cash_path));
         if (!folder.exists()) folder.mkdir();
-        mega.download(city.getMapCash(), getString(R.string.map_cash_path));
+        //mega.download(city.getMapCash(), getString(R.string.map_cash_path));
         String dirPath = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0).applicationInfo.dataDir;
         String name = mega.download(city.getDataCash(), dirPath);
         File zipFile = new File(dirPath + "/" + name);
@@ -147,6 +132,17 @@ public class DownloadService extends IntentService {
         zipFile.delete();
     }
 
+    private void error() {
+        mBuilder.setContentText("Download error")
+                .setProgress(0, 0, false)
+                .setOngoing(false);
+        mNotifyManager.notify(id, mBuilder.build());
+
+        Log.d(SERVICE_TAG, "FNISH id " + city.getId());
+        Intent intent = new Intent(DetailGuideInfoActivity.BROADCAST_ACTION);
+        intent.putExtra(DetailGuideInfoActivity.FINISH, DetailGuideInfoActivity.STATUS_ERROR);
+        sendBroadcast(intent);
+    }
     private void unZip(File zipFile, File dest) throws FileNotFoundException {
         InputStream stream = new FileInputStream(zipFile);
         byte[] buffer = new byte[1024];

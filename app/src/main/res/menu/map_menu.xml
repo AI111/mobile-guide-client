@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="@string/info">
+        <group android:checkableBehavior="all">
+            <item
+                android:id="@+id/showplace"
+                android:checked="true"
+                android:icon="@drawable/cathedral_48"
+                android:title="@string/showplace"/>
+            <item
+                android:id="@+id/restaurant"
+                android:checked="true"
+                android:icon="@drawable/ic_restaurant_menu_black_24dp"
+                android:title="@string/restaurant"/>
+            <item
+                android:id="@+id/museum"
+                android:checked="true"
+                android:icon="@drawable/ic_settings_black_24dp"
+                android:title="@string/museum"/>
+            <item
+                android:id="@+id/shop"
+                android:checked="true"
+                android:icon="@drawable/ic_shopping_cart_black_24dp"
+                android:title="@string/shop"/>
+            <item
+                android:id="@+id/hotel"
+                android:checked="true"
+                android:icon="@drawable/ic_local_hotel_black_24dp"
+                android:title="@string/hotel"/>
+        </group>
+    </item>
+</menu>

@@ -4,12 +4,17 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.sasha.myapplication.R;
@@ -29,13 +34,13 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
 
     public static final String ID_TAG = "CITY_ID";
 
-    RecyclerView mRecyclerView;
     RecyclerView.LayoutManager mLayoutManager;
-
+    ImageView smallImage;
     DrawerLayout Drawer;
     ActionBarDrawerToggle mDrawerToggle;
     private MapFragment mapFragment;
     private String dirPath;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected int getLayout() {
@@ -46,6 +51,7 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(MainActivity.LOG_TAG, "onCreate  MainMapActivity");
+        smallImage = (ImageView) findViewById(R.id.small_img);
         mapFragment = new MapFragment();
         mFab.setOnClickListener(this);
         if (savedInstanceState == null) {
@@ -55,35 +61,21 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
                     .commit();
             Log.d(MainActivity.LOG_TAG, "commit  MainMapActivity");
         }
-        mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
-        mRecyclerView.setHasFixedSize(true);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
+        final ActionBar ab = getSupportActionBar();
+        ab.setHomeAsUpIndicator(R.drawable.ic_dehaze_black_24dp);
+        ab.setDisplayHomeAsUpEnabled(true);
 
-        mLayoutManager = new LinearLayoutManager(this);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //Picasso.with(this).load(R.drawable.odessa).transform(new RoundedTransformation(100, 20)).into(imageView);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        if (navigationView != null) {
+            setupDrawerContent(navigationView);
+        }
 
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        Drawer = (DrawerLayout) findViewById(R.id.DrawerLayout);
-        mDrawerToggle = new ActionBarDrawerToggle(this, Drawer, null, R.string.open, R.string.close) {
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-
-            }
-
-        };
-
-
-        Drawer.setDrawerListener(mDrawerToggle); // Drawer Listener set to the Drawer toggle
-        mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
         mapFragment.setOnMarkerClickListener(this);
 //
         try {
@@ -100,6 +92,36 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
 
     }
 
+    private void setupDrawerContent(NavigationView navigationView) {
+
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        switch (menuItem.getItemId()) {
+                            case R.id.showplace:
+                                menuItem.setChecked(!menuItem.isChecked());
+                                break;
+                            case R.id.restaurant:
+                                menuItem.setChecked(!menuItem.isChecked());
+                                break;
+                            case R.id.museum:
+                                menuItem.setChecked(!menuItem.isChecked());
+                                break;
+                            case R.id.shop:
+                                menuItem.setChecked(!menuItem.isChecked());
+                                break;
+                            case R.id.hotel:
+                                menuItem.setChecked(!menuItem.isChecked());
+                                break;
+                        }
+                        //menuItem.setChecked(true);
+                        //mDrawerLayout.closeDrawers();
+                        return true;
+                    }
+                });
+    }
     @Override
     public boolean onItemSingleTapUp(int index, OverlayItem item, GeoPoint point) {
         Toast.makeText(getApplicationContext(), point.title, Toast.LENGTH_SHORT).show();
@@ -114,6 +136,7 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             // smallImg.setImageBitmap(myBitmap);
             mImageView.setImageBitmap(myBitmap);
+            smallImage.setImageBitmap(myBitmap);
 
         }
         return false;
@@ -128,4 +151,5 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
     public void onClick(View v) {
 
     }
+
 }

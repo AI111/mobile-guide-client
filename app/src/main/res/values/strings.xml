@@ -39,9 +39,10 @@
     <string name="rating">Reting: </string>
 
     <!-- SERVER URLS -->
-    <string name="server_domain" translatable="false">https://nodejs-umap.rhcloud.com</string>
-    <string name="get_guides" translatable="false">https://nodejs-umap.rhcloud.com/guides</string>
-    <string name="get_points" translatable="false">points</string>
+    <string name="server_domain" translatable="false">https://nodejs-umap.rhcloud.com/</string>
+    <string name="get_guides" translatable="false">https://nodejs-umap.rhcloud.com/guides/</string>
+    <string name="get_points" translatable="false">https://nodejs-umap.rhcloud.com/guides/%d/points/</string>
+    <string name="get_imeges" translatable="false">https://nodejs-umap.rhcloud.com/imeges/</string>
 
 
     <!-- PATH FOR SAVED FILES -->

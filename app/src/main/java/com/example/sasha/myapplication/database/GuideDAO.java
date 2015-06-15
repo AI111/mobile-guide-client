@@ -20,5 +20,9 @@ public class GuideDAO extends BaseDaoImpl<Guide, Integer> {
     public List<Guide> getAllCities() throws SQLException {
         return this.queryForAll();
     }
+
+    public List<Guide> getAllIds() throws SQLException {
+        return this.queryBuilder().selectColumns("guide_id").query();
+    }
 }
 

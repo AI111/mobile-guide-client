@@ -1,7 +1,9 @@
 package com.example.sasha.myapplication.views;
 
+import android.accounts.Account;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +24,8 @@ import com.example.sasha.myapplication.R;
 import com.example.sasha.myapplication.database.GeoPoint;
 import com.example.sasha.myapplication.database.Guide;
 import com.example.sasha.myapplication.database.HelperFactory;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -31,6 +35,7 @@ import com.google.android.gms.plus.model.people.Person;
 import com.j256.ormlite.table.TableUtils;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 
@@ -40,6 +45,7 @@ import java.sql.SQLException;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final int RC_SIGN_IN = 0;
     public static String LOG_TAG;
+    public static String token;
     private DrawerLayout mDrawerLayout;
     private GoogleApiClient mGoogleApiClient;
     private boolean mIntentInProgress;
@@ -48,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView name;
     private TextView email;
     private boolean mSignIn;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,6 +221,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onConnected(Bundle connectionHint) {
         mSignIn = true;
         updateUI(true);
+        new GetIdTokenTask().execute();
+
     }
 
     @Override
@@ -265,5 +272,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             name.setText("");
             email.setText("");
         }
+    }
+
+    private class GetIdTokenTask extends AsyncTask<String, Void, String> {
+
+        private final String scope = "audience:server:client_id:221601576513-9gdgmghqm3mkss52ehl4fifv08tpo3v3.apps.googleusercontent.com"; // Not the app's client ID.
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
+            Account account = new Account(accountName, GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
+
+            String idToken = "";
+            try {
+                idToken = GoogleAuthUtil.getTokenWithNotification(getApplicationContext(), account, scope, new Bundle());
+            } catch (IOException e) {
+                Log.e(MainActivity.LOG_TAG, "Error retrieving ID token.", e);
+            } catch (GoogleAuthException e) {
+                Log.e(MainActivity.LOG_TAG, "Error retrieving ID token.", e);
+            }
+            return idToken;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i(MainActivity.LOG_TAG, "ID token:  " + result);
+            token = result;
+        }
+
     }
 }

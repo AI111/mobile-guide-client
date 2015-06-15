@@ -137,7 +137,6 @@ public class MapFragment extends Fragment implements MapViewConstants {
 
     @Override
     public void onResume() {
-        // TODO Auto-generated method stub
         super.onResume();
         myLocationOverlay.enableMyLocation();
         compassOverlay.enableCompass();
@@ -146,7 +145,6 @@ public class MapFragment extends Fragment implements MapViewConstants {
 
     @Override
     public void onPause() {
-        // TODO Auto-generated method stub
         super.onPause();
         myLocationOverlay.disableMyLocation();
         compassOverlay.disableCompass();
