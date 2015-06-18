@@ -22,7 +22,6 @@ import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.ResourceProxyImpl;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
-import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -34,8 +33,9 @@ import java.util.ArrayList;
 /**
  * Created by sasha on 3/6/15.
  */
-public class MapFragment extends Fragment implements MapViewConstants {
+public class MapFragment extends Fragment implements MapViewConstants, ItemizedIconOverlay.OnItemGestureListener<OverlayItem> {
     ITileSource tileSource;
+    ItemizedIconOverlay[] overlays;
     private MapView mapView;
     private ResourceProxyImpl mResourceProxy;
     private IMapController mapController;
@@ -46,6 +46,7 @@ public class MapFragment extends Fragment implements MapViewConstants {
     private ItemizedIconOverlay.OnItemGestureListener<OverlayItem> listener;
     private MyOnItemGestureListener<OverlayItem, GeoPoint> gestureListener;
     private GeoPoint[] geoPoints;
+    private ItemizedIconOverlay overlay;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,11 +114,12 @@ public class MapFragment extends Fragment implements MapViewConstants {
 
         items = new ArrayList<>();
         geoPoints = guide.points.toArray(new GeoPoint[guide.points.size()]);
-        for (GeoPoint point : geoPoints) {
-            OverlayItem item = new OverlayItem(point.title, point.description, new org.osmdroid.util.GeoPoint(point.latitude, point.longitude));
-            item.setMarker(newMarker);
-            items.add(item);
-        }
+        overlays = createOverlays(geoPoints);
+//        for (GeoPoint point : geoPoints) {
+//            OverlayItem item = new OverlayItem(point.title, point.description, new org.osmdroid.util.GeoPoint(point.latitude, point.longitude));
+//            item.setMarker(newMarker);
+//            items.add(item);
+//        }
         listener = new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
             @Override
             public boolean onItemSingleTapUp(int index, OverlayItem item) {
@@ -130,8 +132,11 @@ public class MapFragment extends Fragment implements MapViewConstants {
                 return false;
             }
         };
-        ItemizedOverlay overlay = new ItemizedIconOverlay(getActivity(), items, listener);
-        mapView.getOverlays().add(overlay);
+        //  overlay = new ItemizedIconOverlay(getActivity(), items, listener);
+        for (ItemizedIconOverlay overlay : overlays) {
+            if (overlay != null) mapView.getOverlays().add(overlay);
+        }
+
         mapView.invalidate();
     }
 
@@ -150,4 +155,40 @@ public class MapFragment extends Fragment implements MapViewConstants {
         compassOverlay.disableCompass();
     }
 
+    public void changeMarkers(GeoPoint.PointType type, boolean enable) {
+        if (overlays[type.ordinal()] != null) overlays[type.ordinal()].setEnabled(enable);
+        //overlay.setEnabled(false);
+    }
+
+    ItemizedIconOverlay[] createOverlays(GeoPoint[] points) {
+        Drawable newMarker = this.getResources().getDrawable(R.drawable.ic_location_on_black_48dp);
+        int poitTypeSize = GeoPoint.PointType.values().length;
+        ArrayList<OverlayItem>[] markers = new ArrayList[poitTypeSize];
+        // Arrays.fill(markers,new ArrayList<OverlayItem>());
+        ItemizedIconOverlay[] overlays = new ItemizedIconOverlay[poitTypeSize];
+        for (GeoPoint point : points) {
+            int type = point.getType().ordinal();
+            OverlayItem item = new OverlayItem(point.getTitle(), point.getDescription(), new org.osmdroid.util.GeoPoint(point.getLatitude(), point.getLongitude()));
+            item.setMarker(newMarker);
+            if (markers[type] == null) markers[type] = new ArrayList<OverlayItem>();
+            markers[type].add(item);
+        }
+        for (int i = 0; i < poitTypeSize; i++) {
+            if (markers[i] != null)
+                overlays[i] = new ItemizedIconOverlay(getActivity(), markers[i], this);
+        }
+        return overlays;
+    }
+
+    @Override
+    public boolean onItemSingleTapUp(int index, OverlayItem item) {
+        gestureListener.onItemSingleTapUp(index, item, geoPoints[index]);
+        Log.d(MainActivity.LOG_TAG, "indexd " + index);
+        return false;
+    }
+
+    @Override
+    public boolean onItemLongPress(int index, OverlayItem item) {
+        return false;
+    }
 }

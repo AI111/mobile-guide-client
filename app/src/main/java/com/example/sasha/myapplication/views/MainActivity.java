@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new InstalledItemFragment()).commit();
 
     }
 

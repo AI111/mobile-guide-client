@@ -9,24 +9,24 @@ import java.util.Arrays;
 @DatabaseTable(tableName = "points")
 public class GeoPoint {
     @DatabaseField(id = true, canBeNull = false)
-    public int point_id;
+    private int point_id;
     @DatabaseField()
-    public String title;
+    private String title;
     @DatabaseField(dataType = DataType.ENUM_INTEGER)
-    public PointType type;
+    private PointType type;
     @DatabaseField()
-    public String description;
-    ;
+    private String description;
+
     @DatabaseField()
-    public String text;
+    private String text;
     @DatabaseField(dataType = DataType.SERIALIZABLE)
-    public String[] galery;
+    private String[] galery;
     @DatabaseField()
-    public String audio;
+    private String audio;
     @DatabaseField()
-    public double latitude;
+    private double latitude;
     @DatabaseField()
-    public double longitude;
+    private double longitude;
     @DatabaseField(foreign = true, foreignAutoRefresh = true,canBeNull = true)
     private Guide cityGuide;
 
@@ -52,6 +52,74 @@ public class GeoPoint {
 
     public void setGuide(Guide cityGuide) {
         this.cityGuide = cityGuide;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public PointType getType() {
+        return type;
+    }
+
+    public void setType(PointType type) {
+        this.type = type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String[] getGalery() {
+        return galery;
+    }
+
+    public void setGalery(String[] galery) {
+        this.galery = galery;
+    }
+
+    public String getAudio() {
+        return audio;
+    }
+
+    public void setAudio(String audio) {
+        this.audio = audio;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public int getPoint_id() {
+        return point_id;
     }
 
     @Override

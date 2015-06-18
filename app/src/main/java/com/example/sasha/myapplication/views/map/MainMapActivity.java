@@ -8,14 +8,12 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.sasha.myapplication.R;
 import com.example.sasha.myapplication.database.GeoPoint;
@@ -33,15 +31,19 @@ import java.util.Arrays;
 public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClicklistener, MyOnItemGestureListener<OverlayItem, GeoPoint>, View.OnClickListener {
 
     public static final String ID_TAG = "CITY_ID";
+    public static final String NAME = "NAME";
+    public static final String EMAIL = "EMAIL";
+    public static final String IMAGE = "IMAGE";
+
 
     RecyclerView.LayoutManager mLayoutManager;
     ImageView smallImage;
     DrawerLayout Drawer;
-    ActionBarDrawerToggle mDrawerToggle;
+    boolean playngAudio;
     private MapFragment mapFragment;
     private String dirPath;
     private DrawerLayout mDrawerLayout;
-
+    private GeoPoint currentGeoPoint;
     @Override
     protected int getLayout() {
         return R.layout.activity_map_drawer;
@@ -54,6 +56,7 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
         smallImage = (ImageView) findViewById(R.id.small_img);
         mapFragment = new MapFragment();
         mFab.setOnClickListener(this);
+        // playBtn.setOnClickListener(this);
         if (savedInstanceState == null) {
 
             getSupportFragmentManager().beginTransaction()
@@ -102,18 +105,23 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
                         switch (menuItem.getItemId()) {
                             case R.id.showplace:
                                 menuItem.setChecked(!menuItem.isChecked());
+                                mapFragment.changeMarkers(GeoPoint.PointType.SHOWPLACE, menuItem.isChecked());
                                 break;
                             case R.id.restaurant:
                                 menuItem.setChecked(!menuItem.isChecked());
+                                mapFragment.changeMarkers(GeoPoint.PointType.RESTAURAN, menuItem.isChecked());
                                 break;
                             case R.id.museum:
                                 menuItem.setChecked(!menuItem.isChecked());
+                                mapFragment.changeMarkers(GeoPoint.PointType.MUSEUM, menuItem.isChecked());
                                 break;
                             case R.id.shop:
                                 menuItem.setChecked(!menuItem.isChecked());
+                                mapFragment.changeMarkers(GeoPoint.PointType.SHOP, menuItem.isChecked());
                                 break;
                             case R.id.hotel:
                                 menuItem.setChecked(!menuItem.isChecked());
+                                mapFragment.changeMarkers(GeoPoint.PointType.HOTEL, menuItem.isChecked());
                                 break;
                         }
                         //menuItem.setChecked(true);
@@ -124,20 +132,19 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
     }
     @Override
     public boolean onItemSingleTapUp(int index, OverlayItem item, GeoPoint point) {
-        Toast.makeText(getApplicationContext(), point.title, Toast.LENGTH_SHORT).show();
-        mTitle.setText(point.title);
+        //Toast.makeText(getApplicationContext(), point.getTitle(), Toast.LENGTH_SHORT).show();
+        mTitle.setText(point.getTitle());
         Log.d(MainActivity.LOG_TAG, Arrays.toString(GeoPoint.PointType.values()));
 
-        Log.d(MainActivity.LOG_TAG, dirPath + "/" + point.galery[0]);
-        File imgFile = new File(dirPath + "/" + point.galery[0]);
-
+        Log.d(MainActivity.LOG_TAG, dirPath + "/" + point.getGalery()[0]);
+        File imgFile = new File(dirPath + "/" + point.getGalery()[0]);
+        currentGeoPoint = point;
         if (imgFile.exists()) {
-            Log.d(MainActivity.LOG_TAG, dirPath + "/" + point.galery[0]);
+            Log.d(MainActivity.LOG_TAG, dirPath + "/" + point.getGalery()[0]);
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             // smallImg.setImageBitmap(myBitmap);
             mImageView.setImageBitmap(myBitmap);
             smallImage.setImageBitmap(myBitmap);
-
         }
         return false;
     }
@@ -148,8 +155,15 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
     }
 
     @Override
-    public void onClick(View v) {
-
+    public void onClick(View view) {
+//        if(view.getId()==R.id.fab||view.getId()==R.id.play_btn){
+//            if(currentGeoPoint!=null){
+//                File file = new File(dirPath+"/"+currentGeoPoint.getAudio());
+//                file
+//                MediaPlayer mediaPlayer = MediaPlayer.create(this,)
+//
+//            }
+//        }
     }
 
 }

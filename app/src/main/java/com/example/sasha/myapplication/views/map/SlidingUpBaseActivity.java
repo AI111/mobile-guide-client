@@ -40,6 +40,8 @@ public class SlidingUpBaseActivity extends ActionBarActivity implements Observab
     protected TextView mTitle;
     protected ImageView mImageView, smallImg;
     protected ImageButton mFab;
+    protected ImageButton playBtn;
+    boolean showDetailToolbar = true;
     private View mHeader;
     private View mHeaderBar;
     private View mHeaderOverlay;
@@ -170,7 +172,7 @@ public class SlidingUpBaseActivity extends ActionBarActivity implements Observab
         mScrollable = createScrollable();
 
         mFab = (ImageButton) findViewById(R.id.fab);
-
+        playBtn = (ImageButton) findViewById(R.id.play_btn);
         DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
         Height = metrics.heightPixels;
 
@@ -342,6 +344,19 @@ public class SlidingUpBaseActivity extends ActionBarActivity implements Observab
                 ViewHelper.setScaleY(mToolbar, 1);
             }
             mToolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(0, mToolbarColor));
+        }
+        if (ViewHelper.getTranslationY(mInterceptionLayout) > getScreenHeight() - mHeaderBarHeight - mHeaderBarHeight) {
+            if (!showDetailToolbar) {
+                playBtn.setVisibility(View.VISIBLE);
+                smallImg.setVisibility(View.VISIBLE);
+                showDetailToolbar = true;
+            }
+        } else {
+            if (showDetailToolbar) {
+                playBtn.setVisibility(View.GONE);
+                smallImg.setVisibility(View.GONE);
+                showDetailToolbar = false;
+            }
         }
 
         changeToolbarTitleVisibility();

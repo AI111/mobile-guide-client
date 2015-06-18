@@ -90,7 +90,8 @@ public class DownloadService extends IntentService {
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
             GeoPoint[] geoPoints = restTemplate.getForObject(String.format(getString(R.string.get_points), city.getId()), GeoPoint[].class);
             for (GeoPoint point : geoPoints) {
-                point.galery = restTemplate.getForObject(getString(R.string.get_imeges) + city.getId(), String[].class);
+                point.setGalery(restTemplate.getForObject(getString(R.string.get_imeges) + point.getPoint_id(), String[].class));
+                Log.d(MainActivity.LOG_TAG, "imeges = " + Arrays.toString(point.getGalery()));
             }
             Log.d(MainActivity.LOG_TAG, Arrays.toString(geoPoints));
             //download data structure
