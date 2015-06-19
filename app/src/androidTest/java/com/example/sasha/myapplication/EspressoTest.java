@@ -39,6 +39,7 @@ public class EspressoTest {
     @Test
     public void checkNavDrawer() {
         onView(withId(R.id.container)).perform(ViewActions.swipeRight());
+
     }
 
 
