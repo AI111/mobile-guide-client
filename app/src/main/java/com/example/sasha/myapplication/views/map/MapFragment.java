@@ -116,23 +116,24 @@ public class MapFragment extends Fragment implements MapViewConstants, ItemizedI
         geoPoints = guide.points.toArray(new GeoPoint[guide.points.size()]);
         overlays = createOverlays(geoPoints);
 //        for (GeoPoint point : geoPoints) {
-//            OverlayItem item = new OverlayItem(point.title, point.description, new org.osmdroid.util.GeoPoint(point.latitude, point.longitude));
+//            OverlayItem item = new OverlayItem(point.getTitle(), point.getDescription(), new org.osmdroid.util.GeoPoint(point.getLatitude(), point.getLongitude()));
 //            item.setMarker(newMarker);
 //            items.add(item);
 //        }
-        listener = new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
-            @Override
-            public boolean onItemSingleTapUp(int index, OverlayItem item) {
-                gestureListener.onItemSingleTapUp(index, item, geoPoints[index]);
-                return false;
-            }
-
-            @Override
-            public boolean onItemLongPress(int index, OverlayItem item) {
-                return false;
-            }
-        };
-        //  overlay = new ItemizedIconOverlay(getActivity(), items, listener);
+//        listener = new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+//            @Override
+//            public boolean onItemSingleTapUp(int index, OverlayItem item) {
+//
+//                gestureListener.onItemSingleTapUp(index, item, geoPoints[index]);
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onItemLongPress(int index, OverlayItem item) {
+//                return false;
+//            }
+//        };
+//          overlay = new ItemizedIconOverlay(getActivity(), items, listener);
         for (ItemizedIconOverlay overlay : overlays) {
             if (overlay != null) mapView.getOverlays().add(overlay);
         }
@@ -166,13 +167,15 @@ public class MapFragment extends Fragment implements MapViewConstants, ItemizedI
         ArrayList<OverlayItem>[] markers = new ArrayList[poitTypeSize];
         // Arrays.fill(markers,new ArrayList<OverlayItem>());
         ItemizedIconOverlay[] overlays = new ItemizedIconOverlay[poitTypeSize];
-        for (GeoPoint point : points) {
-            int type = point.getType().ordinal();
-            OverlayItem item = new OverlayItem(point.getTitle(), point.getDescription(), new org.osmdroid.util.GeoPoint(point.getLatitude(), point.getLongitude()));
+        for (int i = 0; i < points.length; i++) {
+            int type = points[i].getType().ordinal();
+            OverlayItem item = new OverlayItem(Integer.toString(i), points[i].getTitle(), points[i].getDescription(), new org.osmdroid.util.GeoPoint(points[i].getLatitude(), points[i].getLongitude()));
             item.setMarker(newMarker);
-            if (markers[type] == null) markers[type] = new ArrayList<OverlayItem>();
+            if (markers[type] == null) markers[type] = new ArrayList<>();
             markers[type].add(item);
         }
+
+
         for (int i = 0; i < poitTypeSize; i++) {
             if (markers[i] != null)
                 overlays[i] = new ItemizedIconOverlay(getActivity(), markers[i], this);
@@ -182,8 +185,9 @@ public class MapFragment extends Fragment implements MapViewConstants, ItemizedI
 
     @Override
     public boolean onItemSingleTapUp(int index, OverlayItem item) {
-        gestureListener.onItemSingleTapUp(index, item, geoPoints[index]);
-        Log.d(MainActivity.LOG_TAG, "indexd " + index);
+        Log.d(MainActivity.LOG_TAG, "indexd " + index + " " + item.getTitle() + " " + item.getUid());
+
+        gestureListener.onItemSingleTapUp(index, item, geoPoints[Integer.parseInt(item.getUid())]);
         return false;
     }
 

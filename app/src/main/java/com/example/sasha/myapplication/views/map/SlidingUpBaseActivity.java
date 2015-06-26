@@ -8,6 +8,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -39,7 +40,7 @@ public class SlidingUpBaseActivity extends ActionBarActivity implements Observab
     private static final int NUM_OF_ITEMS_FEW = 3;
     protected TextView mTitle;
     protected ImageView mImageView, smallImg;
-    protected ImageButton mFab;
+    protected FloatingActionButton mFab;
     protected ImageButton playBtn;
     boolean showDetailToolbar = true;
     private View mHeader;
@@ -171,7 +172,7 @@ public class SlidingUpBaseActivity extends ActionBarActivity implements Observab
         smallImg = (ImageView) findViewById(R.id.small_img);
         mScrollable = createScrollable();
 
-        mFab = (ImageButton) findViewById(R.id.fab);
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
         playBtn = (ImageButton) findViewById(R.id.play_btn);
         DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
         Height = metrics.heightPixels;

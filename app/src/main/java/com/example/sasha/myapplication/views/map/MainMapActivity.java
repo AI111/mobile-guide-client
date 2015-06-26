@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.sasha.myapplication.R;
 import com.example.sasha.myapplication.database.GeoPoint;
@@ -53,7 +54,8 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
         Log.d(MainActivity.LOG_TAG, "onCreate  MainMapActivity");
         smallImage = (ImageView) findViewById(R.id.small_img);
         mapFragment = new MapFragment();
-        mFab.setOnClickListener(this);
+//        mFab.setOnClickListener(this);
+//        playBtn.setOnClickListener(this);
         // playBtn.setOnClickListener(this);
         if (savedInstanceState == null) {
 
@@ -152,13 +154,27 @@ public class MainMapActivity extends SlidingUpBaseActivity implements OnItemClic
         return false;
     }
 
+    public void someHandler(View v) {
+        Toast.makeText(getApplicationContext(), "click", Toast.LENGTH_SHORT).show();
+    }
     @Override
     public void onClick(View view) {
+        Log.d(MainActivity.LOG_TAG, "onClick");
+        Toast.makeText(getApplicationContext(), "click", Toast.LENGTH_SHORT).show();
 //        if(view.getId()==R.id.fab||view.getId()==R.id.play_btn){
 //            if(currentGeoPoint!=null){
 //                File file = new File(dirPath+"/"+currentGeoPoint.getAudio());
-//                file
-//                MediaPlayer mediaPlayer = MediaPlayer.create(this,)
+//
+//                MediaPlayer mediaPlayer = MediaPlayer.create(this, Uri.fromFile(file));
+//                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//                try {
+//                    mediaPlayer.prepare();
+//                    mediaPlayer.start();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    mediaPlayer.release();
+//                }
+//
 //
 //            }
 //        }
